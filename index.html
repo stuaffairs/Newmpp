@@ -318,13 +318,12 @@
             document.getElementById('summary-filter-btn').addEventListener('click', filterSummaryTable);
             document.getElementById('summary-filter-type').addEventListener('change', setupSummaryTableFilters);
 
-            // Chart Filter Listeners
             document.getElementById('filter-type').addEventListener('change', handleFilterTypeChange);
             document.getElementById('level-filter').addEventListener('change', updateCharts);
 
             fetchAllData().then(() => {
                 renderSummaryTable(allData);
-                updateCharts(); // Initial chart render
+                updateCharts();
             });
         });
 
@@ -336,17 +335,52 @@
             document.querySelector(`.nav-button[onclick="showPage('${pageId}')"]`).classList.add('active');
         }
 
+        // --- START OF FIX: Re-added file processing logic ---
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+            });
+        }
+        
         async function handleFormSubmit(e) {
             e.preventDefault();
             Swal.fire({ title: 'กำลังบันทึกข้อมูล...', text: 'กรุณารอสักครู่', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
             const form = e.target;
+            const docFile = form.docFile.files[0];
+            const imgFile = form.imgFile.files[0];
+            
+            let docData = {};
+            let imgData = {};
+
+            if (docFile) {
+                const base64 = await fileToBase64(docFile);
+                docData = { base64, type: docFile.type, name: docFile.name };
+            }
+            if (imgFile) {
+                const base64 = await fileToBase64(imgFile);
+                imgData = { base64, type: imgFile.type, name: imgFile.name };
+            }
+            
             const params = new URLSearchParams({
-                action: 'create', timestamp: new Date().toLocaleString('th-TH'), level: form.level.value,
-                classroom: form.classroom.value, studentNumber: form.studentNumber.value, studentId: form.studentId.value,
-                fullName: form.fullName.value, nickname: form.nickname.value, recordDate: form.recordDate.value,
-                offenseType: form.offenseType.value, occurrence: form.occurrence.value, behavior: form.behavior.value,
+                action: 'create',
+                timestamp: new Date().toLocaleString('th-TH'),
+                level: form.level.value,
+                classroom: form.classroom.value,
+                studentNumber: form.studentNumber.value,
+                studentId: form.studentId.value,
+                fullName: form.fullName.value,
+                nickname: form.nickname.value,
+                recordDate: form.recordDate.value,
+                offenseType: form.offenseType.value,
+                occurrence: form.occurrence.value,
+                behavior: form.behavior.value,
                 notes: form.notes.value,
+                documentData: JSON.stringify(docData),
+                imageData: JSON.stringify(imgData)
             });
 
             try {
@@ -364,9 +398,10 @@
                 } else { throw new Error(result.message); }
             } catch (error) { Swal.fire('ผิดพลาด!', error.message, 'error'); }
         }
+        // --- END OF FIX ---
         
         async function fetchAllData() {
-            if (allData.length > 0) return; // Avoid re-fetching if data exists
+            if (allData.length > 0) return;
             Swal.fire({ title: 'กำลังโหลดข้อมูล...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
             try {
                 const response = await fetch(`${SCRIPT_URL}?action=read`);
@@ -526,7 +561,6 @@
             }
         }
         
-        // --- Summary Page Table Filter ---
         function setupSummaryTableFilters() {
             const filterTypeEl = document.getElementById('summary-filter-type');
             const currentFilter = filterTypeEl.value;
@@ -554,7 +588,7 @@
             } else if (currentFilter === 'classroom') {
                  inputHtml = `<select id="summary-filter-value" class="form-control">${Array.from({length: 18}, (_, i) => `<option value="${i+1}">ห้อง ${i+1}</option>`).join('')}</select>`;
             } else {
-                 inputHtml = ''; // No input for All, Serious, Minor
+                 inputHtml = '';
             }
             container.innerHTML = inputHtml;
             if(inputHtml !== '') document.getElementById('summary-filter-value').style.width = 'auto';
@@ -571,7 +605,7 @@
                     case 'all': return true;
                     case 'level': return row.level === value;
                     case 'date': return row.recordDate === value;
-                    case 'month': return row.recordDate.startsWith(value); // YYYY-MM
+                    case 'month': return row.recordDate.startsWith(value);
                     case 'classroom': return row.classroom == value.replace('ห้อง ','');
                     case 'offense_serious': return row.offenseType === 'ร้ายแรง';
                     case 'offense_minor': return row.offenseType === 'ไม่ร้ายแรง';
@@ -581,7 +615,6 @@
             renderSummaryTable(filtered);
         }
 
-        // --- Charting Logic ---
         function handleFilterTypeChange(e) {
             const type = e.target.value;
             document.getElementById('level-filter-group').style.display = (type === 'level') ? 'block' : 'none';
@@ -590,9 +623,7 @@
 
         function getFilteredDataForChart() {
             const filterType = document.getElementById('filter-type').value;
-            if (filterType === 'all') {
-                return allData;
-            }
+            if (filterType === 'all') return allData;
             if (filterType === 'level') {
                 const selectedLevel = document.getElementById('level-filter').value;
                 return allData.filter(row => row.level === selectedLevel);
@@ -614,14 +645,15 @@
                 return;
             }
             
+            const commonLayout = `<div class="chart-grid"><div id="chart-container-1"></div><div id="chart-container-2"></div></div><div class="chart-grid"><div id="chart-container-3"></div><div id="chart-container-4"></div></div>`;
+            wrapper.innerHTML = commonLayout;
+
             if (filterType === 'all') {
-                wrapper.innerHTML = `<div class="chart-grid"><div id="chart-container-1"></div><div id="chart-container-2"></div></div><div class="chart-grid"><div id="chart-container-3"></div><div id="chart-container-4"></div></div>`;
                 createChart(data, 'bar', 'chart-container-1', 'พฤติกรรมแยกตามระดับชั้น', 'level');
                 createChart(data, 'doughnut', 'chart-container-2', 'ประเภทพฤติกรรม (ภาพรวม)', 'behavior');
                 createChart(data, 'bar', 'chart-container-3', 'พฤติกรรมแยกตามเดือน', 'month');
                 createChart(data, 'bar', 'chart-container-4', '10 อันดับนักเรียนที่ถูกบันทึกข้อมูลสูงสุด', 'student');
             } else if (filterType === 'level') {
-                wrapper.innerHTML = `<div class="chart-grid"><div id="chart-container-1"></div><div id="chart-container-2"></div></div><div class="chart-grid"><div id="chart-container-3"></div><div id="chart-container-4"></div></div>`;
                 createChart(data, 'bar', 'chart-container-1', 'พฤติกรรมแยกตามห้องเรียน', 'classroom');
                 createChart(data, 'doughnut', 'chart-container-2', 'ประเภทพฤติกรรม', 'behavior');
                 createChart(data, 'bar', 'chart-container-3', 'พฤติกรรมแยกตามเดือน', 'month');
@@ -669,8 +701,7 @@
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
+                    responsive: true, maintainAspectRatio: true,
                     plugins: {
                         title: { display: true, text: title, font: { size: 16 } },
                         legend: { position: type === 'doughnut' ? 'right' : 'top', display: type !== 'bar' || groupBy === 'student'}
