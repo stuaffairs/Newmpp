@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบบันทึกข้อมูลพฤติกรรมนักเรียน</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #003366; /* น้ำเงินเข้ม */
+            --secondary-color: #6699CC; /* ฟ้าอ่อน */
+            --light-color: #FFFFFF;
+            --text-color: #333;
+            --border-color: #ddd;
+            --header-font-size: 2.5em;
+            --subheader-font-size: 1.5em;
+        }
+
+        body {
+            font-family: 'Sarabun', 'Kanit', sans-serif;
+            margin: 0;
+            background-color: #f4f7fc;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            padding: 20px;
+            text-align: center;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: var(--header-font-size);
+            font-weight: bold;
+            margin: 0;
+        }
+
+        header h2 {
+            font-size: var(--subheader-font-size);
+            font-weight: normal;
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: var(--light-color);
+            padding: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        .nav-button {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: none;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-button:hover, .nav-button.active {
+            background-color: #f0f4f8;
+            color: #0056b3;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+        
+        .page {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .card {
+            background-color: var(--light-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+
+        .form-control, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus, select:focus, textarea:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+        }
+        .btn-primary:hover { background-color: #004488; }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--light-color);
+        }
+        .btn-secondary:hover { background-color: #5588bb; }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: var(--light-color);
+        }
+        .btn-danger:hover { background-color: #c82333; }
+        
+        .btn-success {
+             background-color: #28a745;
+             color: var(--light-color);
+        }
+        .btn-success:hover { background-color: #218838; }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        thead {
+            background-color: #f0f4f8;
+        }
+        
+        th {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .search-filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-filters input, .search-filters select {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+        }
+        
+        .chart-container {
+             width: 100%;
+             margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --header-font-size: 2em;
+                --subheader-font-size: 1.2em;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            nav {
+                flex-direction: column;
+            }
+            .nav-button {
+                text-align: left;
+                border-bottom: 1px solid var(--border-color);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><i class="fas fa-book-reader"></i> บันทึกข้อมูลพฤติกรรมนักเรียน</h1>
+        <h2>โรงเรียนมาบตาพุดพันพิทยาคาร</h2>
+    </header>
+
+    <div class="container">
+        <nav>
+            <button class="nav-button active" onclick="showPage('page-form')"><i class="fas fa-edit"></i> บันทึกข้อมูล</button>
+            <button class="nav-button" onclick="showPage('page-view')"><i class="fas fa-search"></i> แสดงข้อมูลนักเรียน</button>
+            <button class="nav-button" onclick="showPage('page-summary')"><i class="fas fa-chart-bar"></i> สรุปข้อมูล</button>
+        </nav>
+
+        <div id="page-form" class="page active">
+            <div class="card">
+                <form id="behaviorForm">
+                    <h3><i class="fas fa-user-plus"></i> ข้อมูลนักเรียนและพฤติกรรม</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="level">ระดับชั้น</label>
+                            <select id="level" name="level" class="form-control" required>
+                                ${Array.from({length: 6}, (_, i) => `<option value="ม.${i+1}">ม.${i+1}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="classroom">ห้องเรียน</label>
+                            <select id="classroom" name="classroom" class="form-control" required>
+                                ${Array.from({length: 18}, (_, i) => `<option value="${i+1}">ห้อง ${i+1}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentNumber">เลขที่</label>
+                            <select id="studentNumber" name="studentNumber" class="form-control" required>
+                                ${Array.from({length: 50}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('')}
+                            </select>
+                        </div>
+                         <div class="form-group">
+                            <label for="studentId">รหัสประจำตัวนักเรียน</label>
+                            <input type="text" id="studentId" name="studentId" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fullName">ชื่อ-สกุล</label>
+                            <input type="text" id="fullName" name="fullName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nickname">ชื่อเล่น</label>
+                            <input type="text" id="nickname" name="nickname" class="form-control">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="recordDate">วันที่</label>
+                            <input type="date" id="recordDate" name="recordDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="offenseType">ประเภทความผิด</label>
+                            <select id="offenseType" name="offenseType" class="form-control" required>
+                                <option value="">-- เลือกประเภท --</option>
+                                <option value="ร้ายแรง">ร้ายแรง</option>
+                                <option value="ไม่ร้ายแรง">ไม่ร้ายแรง</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="occurrence">ครั้งที่</label>
+                            <select id="occurrence" name="occurrence" class="form-control" required>
+                                ${Array.from({length: 20}, (_, i) => `<option value="${i+1}">ครั้งที่ ${i+1}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="behavior">พฤติกรรม</label>
+                        <select id="behavior" name="behavior" class="form-control" required>
+                            <option value="">-- กรุณาเลือกประเภทความผิดก่อน --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">หมายเหตุ</label>
+                        <textarea id="notes" name="notes" rows="3" class="form-control"></textarea>
+                    </div>
+                     <div class="form-grid">
+                        <div class="form-group">
+                            <label for="docFile">แนบไฟล์เอกสาร (PDF, DOCX)</label>
+                            <input type="file" id="docFile" name="docFile" class="form-control" accept=".pdf,.doc,.docx">
+                        </div>
+                        <div class="form-group">
+                            <label for="imgFile">แนบไฟล์รูปภาพ (JPG, PNG)</label>
+                            <input type="file" id="imgFile" name="imgFile" class="form-control" accept="image/jpeg,image/png">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> บันทึกข้อมูล</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="page-view" class="page">
+             <div class="card">
+                <h3><i class="fas fa-search"></i> ค้นหาข้อมูลนักเรียน</h3>
+                <div class="search-filters">
+                    <input type="text" id="search-keyword" placeholder="ค้นหาจากชื่อ, ชื่อเล่น, รหัสนักเรียน...">
+                    <select id="search-class">
+                        <option value="">ค้นหาทุกห้อง</option>
+                        ${Array.from({length: 18}, (_, i) => `<option value="${i+1}">ห้อง ${i+1}</option>`).join('')}
+                    </select>
+                    <button id="search-btn" class="btn btn-secondary"><i class="fas fa-search"></i> ค้นหา</button>
+                     <a href="https://docs.google.com/spreadsheets/d/18y2awmDybmsbq1NAXedByAdrAKwKLC8CYy32032M0iw" target="_blank" class="btn btn-success"><i class="fab fa-google-drive"></i> เปิด Google Sheet</a>
+                </div>
+                <div class="table-container">
+                    <table id="view-table">
+                        <thead>
+                            <tr>
+                                <th>วันที่</th>
+                                <th>ระดับชั้น</th>
+                                <th>ห้อง</th>
+                                <th>เลขที่</th>
+                                <th>รหัสนักเรียน</th>
+                                <th>ชื่อ-สกุล</th>
+                                <th>ชื่อเล่น</th>
+                                <th>ประเภทความผิด</th>
+                                <th>พฤติกรรม</th>
+                                <th>หมายเหตุ</th>
+                                <th>ไฟล์แนบ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="view-table-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-summary" class="page">
+            <div class="card">
+                <h3><i class="fas fa-tasks"></i> จัดการและสรุปข้อมูล</h3>
+                 <div class="search-filters">
+                    <input type="text" id="summary-search-keyword" placeholder="ค้นหาจากชื่อ, รหัสนักเรียน...">
+                    <button id="summary-search-btn" class="btn btn-secondary"><i class="fas fa-search"></i> ค้นหา</button>
+                    <button id="summary-show-all-btn" class="btn btn-secondary"><i class="fas fa-list"></i> แสดงทั้งหมด</button>
+                     <a href="https://docs.google.com/spreadsheets/d/18y2awmDybmsbq1NAXedByAdrAKwKLC8CYy32032M0iw" target="_blank" class="btn btn-success"><i class="fab fa-google-drive"></i> เปิด Google Sheet</a>
+                </div>
+                <div class="table-container">
+                    <table id="summary-table">
+                        <thead>
+                            <tr>
+                                <th>วันที่</th>
+                                <th>ชื่อ-สกุล</th>
+                                <th>ห้อง</th>
+                                <th>พฤติกรรม</th>
+                                <th>การจัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summary-table-body">
+                             </tbody>
+                    </table>
+                </div>
+            </div>
+             <div class="card">
+                <h3><i class="fas fa-chart-bar"></i> กราฟสรุปข้อมูล</h3>
+                <div class="form-grid">
+                    <div class="chart-container"><canvas id="chartByClass"></canvas></div>
+                    <div class="chart-container"><canvas id="chartByMonth"></canvas></div>
+                </div>
+                 <div class="chart-container" style="margin-top: 20px;"><canvas id="chartByBehavior"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby7nrradcbtRwFB_T7lqiDXnwbo194aUfne14tFf9PHCoNEbj1xl5xJPNOoYzBS0sxw/exec";
+
+        const behaviors = {
+            "ร้ายแรง": [
+                "ร้ายแรง1.บุหรี่", "ร้ายแรง2.บุหรี่ไฟฟ้า/พอต", "ร้ายแรง3.รีดไถ", "ร้ายแรง4.ทะเลาะวิวาท",
+                "ร้ายแรง5.ใช้สื่อสังคมออนไลน์ในทางที่ผิด", "ร้ายแรง6.ลักขโมย", "ร้ายแรง7.ทำร้ายร่างกายผู้อื่น",
+                "ร้ายแรง8.ชู้สาว", "ร้ายแรง9.อื่น ๆ"
+            ],
+            "ไม่ร้ายแรง": [
+                "ไม่ร้ายแรง1.แต่งกายผิดระเบียบ", "ไม่ร้ายแรง2.ใส่เครื่องประดับ", "ไม่ร้ายแรง3.ไม่สแกนหน้าเข้า-ออก",
+                "ไม่ร้ายแรง4.มาโรงเรียนสาย", "ไม่ร้ายแรง5.แต่งหน้า/ทาปาก", "ไม่ร้ายแรง6.ทรงผมผิดระเบียบ/ไม่ผูกโบ",
+                "ไม่ร้ายแรง7.ขาดเรียน", "ไม่ร้ายแรง8.พฤติกรรมส่อในทางชู้สาว", "ไม่ร้ายแรง9.หนีเรียน/โดดเรียน/ไม่เข้าแถว", "ไม่ร้ายแรง9.อื่นๆ"
+            ]
+        };
+        
+        let allData = [];
+        let chartByClass, chartByMonth, chartByBehavior;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set default date
+            document.getElementById('recordDate').valueAsDate = new Date();
+
+            // Handle dynamic behavior dropdown
+            const offenseTypeEl = document.getElementById('offenseType');
+            const behaviorEl = document.getElementById('behavior');
+            offenseTypeEl.addEventListener('change', () => {
+                const selectedType = offenseTypeEl.value;
+                behaviorEl.innerHTML = '<option value="">-- เลือกพฤติกรรม --</option>';
+                if (behaviors[selectedType]) {
+                    behaviors[selectedType].forEach(b => {
+                        const option = document.createElement('option');
+                        option.value = b;
+                        option.textContent = b;
+                        behaviorEl.appendChild(option);
+                    });
+                }
+            });
+
+            // Handle form submission
+            document.getElementById('behaviorForm').addEventListener('submit', handleFormSubmit);
+
+            // Page 2 Search
+            document.getElementById('search-btn').addEventListener('click', () => fetchDataAndView());
+
+            // Page 3 Search
+            document.getElementById('summary-search-btn').addEventListener('click', () => fetchDataAndSummarize({ isSearch: true }));
+            document.getElementById('summary-show-all-btn').addEventListener('click', () => fetchDataAndSummarize({ isSearch: false }));
+
+            // Initial load for summary page
+            fetchDataAndSummarize({ isSearch: false });
+        });
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            
+            document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.nav-button[onclick="showPage('${pageId}')"]`).classList.add('active');
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'กำลังบันทึกข้อมูล...',
+                text: 'กรุณารอสักครู่',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            const form = e.target;
+            const docFile = form.docFile.files[0];
+            const imgFile = form.imgFile.files[0];
+            
+            let docData = {};
+            let imgData = {};
+
+            if(docFile) {
+                const base64 = await fileToBase64(docFile);
+                docData = { base64, type: docFile.type, name: docFile.name };
+            }
+            if(imgFile) {
+                const base64 = await fileToBase64(imgFile);
+                imgData = { base64, type: imgFile.type, name: imgFile.name };
+            }
+
+            const params = new URLSearchParams({
+                action: 'create',
+                timestamp: new Date().toLocaleString('th-TH'),
+                level: form.level.value,
+                classroom: form.classroom.value,
+                studentNumber: form.studentNumber.value,
+                studentId: form.studentId.value,
+                fullName: form.fullName.value,
+                nickname: form.nickname.value,
+                recordDate: form.recordDate.value,
+                offenseType: form.offenseType.value,
+                occurrence: form.occurrence.value,
+                behavior: form.behavior.value,
+                notes: form.notes.value,
+                documentData: JSON.stringify(docData),
+                imageData: JSON.stringify(imgData)
+            });
+
+            try {
+                const res = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: params
+                });
+                const result = await res.json();
+                if (result.status === 'success') {
+                    Swal.fire('สำเร็จ!', 'บันทึกข้อมูลเรียบร้อย', 'success');
+                    form.reset();
+                    document.getElementById('recordDate').valueAsDate = new Date();
+                    fetchDataAndSummarize({ isSearch: false }); // Refresh data
+                } else {
+                    throw new Error(result.message || 'เกิดข้อผิดพลาดในการบันทึก');
+                }
+            } catch (error) {
+                Swal.fire('ผิดพลาด!', error.message, 'error');
+            }
+        }
+        
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+            });
+        }
+        
+        async function fetchData() {
+            Swal.fire({ title: 'กำลังโหลดข้อมูล...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=read`);
+                allData = await response.json();
+                Swal.close();
+            } catch(error) {
+                Swal.fire('ผิดพลาด!', 'ไม่สามารถดึงข้อมูลได้', 'error');
+                allData = [];
+            }
+            return allData;
+        }
+
+        async function fetchDataAndView() {
+            await fetchData();
+            const keyword = document.getElementById('search-keyword').value.toLowerCase();
+            const classroom = document.getElementById('search-class').value;
+            
+            const filteredData = allData.filter(row => {
+                const matchesKeyword = keyword === '' || 
+                                     row.fullName.toLowerCase().includes(keyword) ||
+                                     row.nickname.toLowerCase().includes(keyword) ||
+                                     row.studentId.includes(keyword);
+                const matchesClass = classroom === '' || row.classroom == classroom;
+                return matchesKeyword && matchesClass;
+            });
+            renderViewTable(filteredData);
+        }
+        
+        function renderViewTable(data) {
+            const tbody = document.getElementById('view-table-body');
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">ไม่พบข้อมูล</td></tr>';
+                return;
+            }
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.recordDate}</td>
+                    <td>${row.level}</td>
+                    <td>${row.classroom}</td>
+                    <td>${row.studentNumber}</td>
+                    <td>${row.studentId}</td>
+                    <td>${row.fullName}</td>
+                    <td>${row.nickname}</td>
+                    <td>${row.offenseType}</td>
+                    <td>${row.behavior}</td>
+                    <td>${row.notes}</td>
+                    <td>
+                        ${row.imageUrl ? `<a href="${row.imageUrl}" target="_blank" class="btn btn-secondary btn-sm" style="padding: 5px 10px;"><i class="fas fa-image"></i> รูปภาพ</a>` : ''}
+                        ${row.docUrl ? `<a href="${row.docUrl}" target="_blank" class="btn btn-primary btn-sm" style="padding: 5px 10px;"><i class="fas fa-file-alt"></i> เอกสาร</a>` : ''}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        async function fetchDataAndSummarize({ isSearch }) {
+            await fetchData();
+            let dataToDisplay = [...allData];
+
+            if (isSearch) {
+                const keyword = document.getElementById('summary-search-keyword').value.toLowerCase();
+                dataToDisplay = allData.filter(row => 
+                    keyword === '' || 
+                    row.fullName.toLowerCase().includes(keyword) ||
+                    row.studentId.includes(keyword)
+                );
+            } else {
+                 // Sort by class then date
+                 dataToDisplay.sort((a,b) => {
+                     if (a.classroom < b.classroom) return -1;
+                     if (a.classroom > b.classroom) return 1;
+                     return new Date(b.recordDate) - new Date(a.recordDate);
+                 });
+            }
+            
+            renderSummaryTable(dataToDisplay);
+            renderCharts(allData); // Always render charts with full data
+        }
+
+        function renderSummaryTable(data) {
+             const tbody = document.getElementById('summary-table-body');
+             tbody.innerHTML = '';
+             if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">ไม่พบข้อมูล</td></tr>';
+                return;
+            }
+             data.forEach(row => {
+                 const tr = document.createElement('tr');
+                 tr.setAttribute('data-row-id', row.rowId);
+                 tr.innerHTML = `
+                    <td>${row.recordDate}</td>
+                    <td>${row.fullName} (${row.studentId})</td>
+                    <td>ห้อง ${row.classroom}</td>
+                    <td>${row.behavior}</td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm" onclick="editRow('${row.rowId}')"><i class="fas fa-edit"></i> แก้ไข</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteRow('${row.rowId}')"><i class="fas fa-trash"></i> ลบ</button>
+                    </td>
+                 `;
+                 tbody.appendChild(tr);
+             });
+        }
+        
+        async function editRow(rowId) {
+            const rowData = allData.find(r => r.rowId == rowId);
+            if (!rowData) {
+                Swal.fire('ผิดพลาด', 'ไม่พบข้อมูล', 'error');
+                return;
+            }
+
+            const { value: formValues } = await Swal.fire({
+                title: 'แก้ไขข้อมูลพฤติกรรม',
+                html: `
+                    <p><b>${rowData.fullName}</b></p>
+                    <input id="swal-date" class="swal2-input" type="date" value="${rowData.recordDate}">
+                    <textarea id="swal-notes" class="swal2-textarea" placeholder="หมายเหตุ">${rowData.notes}</textarea>
+                `,
+                focusConfirm: false,
+                preConfirm: () => {
+                    return {
+                        recordDate: document.getElementById('swal-date').value,
+                        notes: document.getElementById('swal-notes').value
+                    }
+                },
+                showCancelButton: true,
+                confirmButtonText: '<i class="fas fa-save"></i> บันทึก',
+                cancelButtonText: 'ยกเลิก',
+            });
+
+            if (formValues) {
+                Swal.fire({ title: 'กำลังอัปเดต...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                const params = new URLSearchParams({
+                    action: 'update',
+                    rowId: rowId,
+                    recordDate: formValues.recordDate,
+                    notes: formValues.notes
+                });
+
+                try {
+                    const res = await fetch(SCRIPT_URL, { method: 'POST', body: params });
+                    const result = await res.json();
+                    if (result.status === 'success') {
+                        Swal.fire('สำเร็จ!', 'อัปเดตข้อมูลเรียบร้อย', 'success');
+                        fetchDataAndSummarize({ isSearch: false });
+                    } else {
+                        throw new Error(result.message || 'เกิดข้อผิดพลาด');
+                    }
+                } catch (error) {
+                    Swal.fire('ผิดพลาด!', error.message, 'error');
+                }
+            }
+        }
+
+        async function deleteRow(rowId) {
+            const result = await Swal.fire({
+                title: 'คุณแน่ใจหรือไม่?',
+                text: "ข้อมูลจะถูกลบอย่างถาวร!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'ใช่, ลบเลย!',
+                cancelButtonText: 'ยกเลิก'
+            });
+
+            if (result.isConfirmed) {
+                Swal.fire({ title: 'กำลังลบ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                const params = new URLSearchParams({ action: 'delete', rowId: rowId });
+                try {
+                    const res = await fetch(SCRIPT_URL, { method: 'POST', body: params });
+                    const result = await res.json();
+                    if (result.status === 'success') {
+                        Swal.fire('ลบแล้ว!', 'ข้อมูลถูกลบเรียบร้อย', 'success');
+                        fetchDataAndSummarize({ isSearch: false });
+                    } else {
+                        throw new Error(result.message || 'เกิดข้อผิดพลาด');
+                    }
+                } catch (error) {
+                    Swal.fire('ผิดพลาด!', error.message, 'error');
+                }
+            }
+        }
+
+        function renderCharts(data) {
+            if (!data || data.length === 0) return;
+
+            // Chart by Class
+            const classCounts = data.reduce((acc, row) => {
+                const className = `ห้อง ${row.classroom}`;
+                acc[className] = (acc[className] || 0) + 1;
+                return acc;
+            }, {});
+            const sortedClasses = Object.keys(classCounts).sort((a,b) => parseInt(a.split(' ')[1]) - parseInt(b.split(' ')[1]));
+            
+            if(chartByClass) chartByClass.destroy();
+            chartByClass = new Chart(document.getElementById('chartByClass'), {
+                type: 'bar',
+                data: {
+                    labels: sortedClasses,
+                    datasets: [{
+                        label: 'จำนวนการกระทำผิดรายห้อง',
+                        data: sortedClasses.map(c => classCounts[c]),
+                        backgroundColor: 'rgba(0, 51, 102, 0.7)',
+                        borderColor: 'rgba(0, 51, 102, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true } }, responsive: true, plugins: { title: { display: true, text: 'สรุปพฤติกรรมแยกตามห้องเรียน' }} }
+            });
+
+            // Chart by Month
+            const monthCounts = data.reduce((acc, row) => {
+                const month = new Date(row.recordDate).toLocaleString('th-TH', { month: 'long' });
+                acc[month] = (acc[month] || 0) + 1;
+                return acc;
+            }, {});
+            const monthOrder = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            const sortedMonths = Object.keys(monthCounts).sort((a,b) => monthOrder.indexOf(a) - monthOrder.indexOf(b));
+
+            if(chartByMonth) chartByMonth.destroy();
+            chartByMonth = new Chart(document.getElementById('chartByMonth'), {
+                type: 'bar',
+                data: {
+                    labels: sortedMonths,
+                    datasets: [{
+                        label: 'จำนวนการกระทำผิดรายเดือน',
+                        data: sortedMonths.map(m => monthCounts[m]),
+                        backgroundColor: 'rgba(102, 153, 204, 0.7)',
+                        borderColor: 'rgba(102, 153, 204, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true } }, responsive: true, plugins: { title: { display: true, text: 'สรุปพฤติกรรมแยกตามเดือน' }} }
+            });
+            
+             // Chart by Behavior Type
+            const behaviorCounts = data.reduce((acc, row) => {
+                const behaviorName = row.behavior.split('.')[1] || row.behavior; // Clean name
+                acc[behaviorName] = (acc[behaviorName] || 0) + 1;
+                return acc;
+            }, {});
+             if(chartByBehavior) chartByBehavior.destroy();
+             chartByBehavior = new Chart(document.getElementById('chartByBehavior'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(behaviorCounts),
+                    datasets: [{
+                        label: 'พฤติกรรม',
+                        data: Object.values(behaviorCounts),
+                        backgroundColor: [
+                           'rgba(255, 99, 132, 0.7)', 'rgba(54, 162, 235, 0.7)', 'rgba(255, 206, 86, 0.7)',
+                           'rgba(75, 192, 192, 0.7)', 'rgba(153, 102, 255, 0.7)', 'rgba(255, 159, 64, 0.7)',
+                           'rgba(199, 199, 199, 0.7)', 'rgba(83, 102, 255, 0.7)', 'rgba(100, 255, 100, 0.7)'
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                 options: { responsive: true, plugins: { title: { display: true, text: 'สรุปพฤติกรรมแยกตามประเภท' }} }
+            });
+        }
+
+    </script>
+</body>
+</html>
