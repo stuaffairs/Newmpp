@@ -180,11 +180,11 @@
 
         <div id="page-view" class="page">
              <div class="card">
-                <h3><i class="fas fa-search"></i> ค้นหาข้อมูลนักเรียน</h3>
+                <h3><i class="fas fa-search"></i> ค้นหาและจัดการข้อมูล</h3>
                 <div class="search-filters">
-                    <input type="text" id="search-keyword" placeholder="ค้นหาจากชื่อ, ชื่อเล่น, รหัสนักเรียน...">
-                    <select id="search-class"></select>
-                    <button id="search-btn" class="btn btn-secondary"><i class="fas fa-search"></i> ค้นหา</button>
+                    <input type="text" id="search-keyword-page2" placeholder="ค้นหาจากชื่อ, ชื่อเล่น, รหัสนักเรียน...">
+                    <select id="search-class-page2"></select>
+                    <button id="search-btn-page2" class="btn btn-secondary"><i class="fas fa-search"></i> ค้นหา</button>
                      <a href="https://docs.google.com/spreadsheets/d/18y2awmDybmsbq1NAXedByAdrAKwKLC8CYy32032M0iw" target="_blank" class="btn btn-success"><i class="fab fa-google-drive"></i> เปิด Google Sheet</a>
                 </div>
                 <div class="table-container">
@@ -193,10 +193,11 @@
                             <tr>
                                 <th>วันที่</th>
                                 <th>ชื่อ-สกุล</th>
+                                <th>ชื่อเล่น</th>
                                 <th>รหัสนักเรียน</th>
                                 <th>ระดับชั้น</th>
-                                <th>ห้อง</th>
                                 <th>ครั้งที่</th>
+                                <th>ประเภทความผิด</th>
                                 <th>พฤติกรรม</th>
                                 <th>การจัดการ</th>
                             </tr>
@@ -210,6 +211,12 @@
         <div id="page-summary" class="page">
             <div class="card">
                 <h3><i class="fas fa-file-alt"></i> สรุปข้อมูลทั้งหมด</h3>
+                 <div class="search-filters">
+                    <label for="summary-filter-type">กรองข้อมูลตาราง:</label>
+                    <select id="summary-filter-type" class="form-control" style="width: auto;"></select>
+                    <div id="summary-filter-input-container" style="display: inline-block;"></div>
+                    <button id="summary-filter-btn" class="btn btn-secondary"><i class="fas fa-filter"></i> กรอง</button>
+                </div>
                 <div class="table-container">
                     <table id="summary-table">
                         <thead>
@@ -217,9 +224,9 @@
                                 <th>วันที่</th>
                                 <th>ระดับชั้น</th>
                                 <th>ห้อง</th>
-                                <th>เลขที่</th>
-                                <th>รหัสนักเรียน</th>
                                 <th>ชื่อ-สกุล</th>
+                                <th>ชื่อเล่น</th>
+                                <th>รหัสนักเรียน</th>
                                 <th>ประเภทความผิด</th>
                                 <th>ครั้งที่</th>
                                 <th>พฤติกรรม</th>
@@ -231,7 +238,7 @@
                 </div>
             </div>
             <div class="card">
-                <h3><i class="fas fa-filter"></i> กรองข้อมูลกราฟ</h3>
+                <h3><i class="fas fa-chart-pie"></i> กรองข้อมูลกราฟ</h3>
                 <div id="chart-filter-controls" class="form-grid">
                     <div class="form-group">
                         <label for="filter-type">เลือกรูปแบบการกรอง</label>
@@ -246,7 +253,7 @@
                         <select id="level-filter" class="form-control"></select>
                     </div>
                     <div class="form-group" id="individual-filter-group" style="display: none;">
-                        <label for="individual-keyword">ค้นหานักเรียน (รหัส, ชื่อ, ชื่อเล่น)</label>
+                        <label for="individual-keyword">ค้นหานักเรียน (รหัส, ชื่อ-สกุล, ชื่อเล่น)</label>
                         <div style="display: flex; gap: 10px;">
                             <input type="text" id="individual-keyword" class="form-control" placeholder="ป้อนข้อมูล...">
                             <button id="individual-search-btn" class="btn btn-secondary"><i class="fas fa-search"></i></button>
@@ -274,15 +281,17 @@
                 "ไม่ร้ายแรง7.ขาดเรียน", "ไม่ร้ายแรง8.พฤติกรรมส่อในทางชู้สาว", "ไม่ร้ายแรง9.หนีเรียน/โดดเรียน/ไม่เข้าแถว", "ไม่ร้ายแรง9.อื่นๆ"
             ]
         };
+        const CHART_COLORS = ['#003366', '#6699CC', '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#E7E9ED', '#7C84CC'];
         
         let allData = [];
         let charts = {};
 
-        function populateDropdown(selectElement, start, end, formatFn) {
+        function populateDropdown(selectElement, start, end, formatFn, initialValue = null) {
             selectElement.innerHTML = '';
             for (let i = start; i <= end; i++) {
                 const { value, text } = formatFn(i);
-                selectElement.innerHTML += `<option value="${value}">${text}</option>`;
+                const selected = (initialValue && value == initialValue) ? 'selected' : '';
+                selectElement.innerHTML += `<option value="${value}" ${selected}>${text}</option>`;
             }
         }
         
@@ -292,13 +301,15 @@
             populateDropdown(document.getElementById('studentNumber'), 1, 50, i => ({ value: i, text: i }));
             populateDropdown(document.getElementById('occurrence'), 1, 20, i => ({ value: i, text: `ครั้งที่ ${i}` }));
             
-            const searchClassSelect = document.getElementById('search-class');
+            const searchClassSelect = document.getElementById('search-class-page2');
             searchClassSelect.innerHTML = '<option value="">ค้นหาทุกห้อง</option>';
             for (let i = 1; i <= 18; i++) { searchClassSelect.innerHTML += `<option value="${i}">ห้อง ${i}</option>`; }
             
             const levelFilterSelect = document.getElementById('level-filter');
             levelFilterSelect.innerHTML = '';
             for (let i = 1; i <= 6; i++) { levelFilterSelect.innerHTML += `<option value="ม.${i}">ม.${i}</option>`; }
+            
+            setupSummaryTableFilters();
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -310,8 +321,11 @@
             });
 
             document.getElementById('behaviorForm').addEventListener('submit', handleFormSubmit);
-            document.getElementById('search-btn').addEventListener('click', () => fetchDataAndView());
+            document.getElementById('search-btn-page2').addEventListener('click', () => fetchDataAndView());
             
+            document.getElementById('summary-filter-btn').addEventListener('click', filterSummaryTable);
+            document.getElementById('summary-filter-type').addEventListener('change', setupSummaryTableFilters);
+
             // Chart Filter Listeners
             document.getElementById('filter-type').addEventListener('change', handleFilterTypeChange);
             document.getElementById('level-filter').addEventListener('change', updateCharts);
@@ -351,6 +365,7 @@
                     Swal.fire('บันทึกสำเร็จ!', 'ข้อมูลถูกบันทึกลงในระบบเรียบร้อย', 'success');
                     form.reset();
                     document.getElementById('recordDate').valueAsDate = new Date();
+                    allData = []; // Clear cache
                     fetchAllData().then(() => {
                         renderSummaryTable(allData);
                         updateCharts();
@@ -375,8 +390,8 @@
 
         async function fetchDataAndView() {
             await fetchAllData();
-            const keyword = document.getElementById('search-keyword').value.toLowerCase();
-            const classroom = document.getElementById('search-class').value;
+            const keyword = document.getElementById('search-keyword-page2').value.toLowerCase();
+            const classroom = document.getElementById('search-class-page2').value;
             
             const filteredData = allData.filter(row => {
                 const matchesKeyword = keyword === '' || row.fullName.toLowerCase().includes(keyword) || row.nickname.toLowerCase().includes(keyword) || row.studentId.includes(keyword);
@@ -390,7 +405,7 @@
             const tbody = document.getElementById('view-table-body');
             tbody.innerHTML = '';
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">ไม่พบข้อมูล</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">ไม่พบข้อมูล</td></tr>';
                 return;
             }
             data.forEach(row => {
@@ -398,13 +413,15 @@
                 tr.innerHTML = `
                     <td>${row.recordDate}</td>
                     <td>${row.fullName}</td>
+                    <td>${row.nickname || '-'}</td>
                     <td>${row.studentId}</td>
                     <td>${row.level}</td>
-                    <td>ห้อง ${row.classroom}</td>
                     <td>ครั้งที่ ${row.occurrence}</td>
+                    <td><span style="color: ${row.offenseType === 'ร้ายแรง' ? 'red' : 'green'};">${row.offenseType}</span></td>
                     <td>${row.behavior}</td>
                     <td>
-                        <button class="btn btn-secondary btn-sm" onclick="openEditModal('${row.rowId}')"><i class="fas fa-edit"></i> แก้ไข</button>
+                        <button class="btn btn-secondary btn-sm" onclick="openEditModal('${row.rowId}')" style="padding: 5px 10px;"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteRow('${row.rowId}')" style="padding: 5px 10px;"><i class="fas fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -424,10 +441,10 @@
                     <td>${row.recordDate}</td>
                     <td>${row.level}</td>
                     <td>ห้อง ${row.classroom}</td>
-                    <td>${row.studentNumber}</td>
-                    <td>${row.studentId}</td>
                     <td>${row.fullName}</td>
-                    <td>${row.offenseType}</td>
+                    <td>${row.nickname || '-'}</td>
+                    <td>${row.studentId}</td>
+                    <td><span style="color: ${row.offenseType === 'ร้ายแรง' ? 'red' : 'green'};">${row.offenseType}</span></td>
                     <td>ครั้งที่ ${row.occurrence}</td>
                     <td>${row.behavior}</td>
                     <td>
@@ -453,53 +470,18 @@
             const rowData = allData.find(r => r.rowId == rowId);
             if (!rowData) return Swal.fire('ผิดพลาด', 'ไม่พบข้อมูล', 'error');
 
-            const modalHtml = `
-                <div style="text-align: left;">
-                    <div class="form-grid">
-                        <div class="form-group"><label>ระดับชั้น</label><select id="swal-level" class="form-control"></select></div>
-                        <div class="form-group"><label>ห้อง</label><select id="swal-classroom" class="form-control"></select></div>
-                        <div class="form-group"><label>เลขที่</label><select id="swal-studentNumber" class="form-control"></select></div>
-                    </div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>รหัสนักเรียน</label><input id="swal-studentId" class="form-control" value="${rowData.studentId}"></div>
-                        <div class="form-group"><label>ชื่อ-สกุล</label><input id="swal-fullName" class="form-control" value="${rowData.fullName}"></div>
-                        <div class="form-group"><label>ชื่อเล่น</label><input id="swal-nickname" class="form-control" value="${rowData.nickname}"></div>
-                    </div>
-                    <hr>
-                    <div class="form-grid">
-                         <div class="form-group"><label>วันที่</label><input id="swal-recordDate" class="form-control" type="date" value="${rowData.recordDate}"></div>
-                         <div class="form-group"><label>ประเภทความผิด</label><select id="swal-offenseType" class="form-control"><option value="ร้ายแรง">ร้ายแรง</option><option value="ไม่ร้ายแรง">ไม่ร้ายแรง</option></select></div>
-                         <div class="form-group"><label>ครั้งที่</label><select id="swal-occurrence" class="form-control"></select></div>
-                    </div>
-                    <div class="form-group"><label>พฤติกรรม</label><select id="swal-behavior" class="form-control"></select></div>
-                    <div class="form-group"><label>หมายเหตุ</label><textarea id="swal-notes" class="swal2-textarea">${rowData.notes}</textarea></div>
-                </div>`;
+            const modalHtml = `<div style="text-align: left;"><div class="form-grid"><div class="form-group"><label>ระดับชั้น</label><select id="swal-level" class="form-control"></select></div><div class="form-group"><label>ห้อง</label><select id="swal-classroom" class="form-control"></select></div><div class="form-group"><label>เลขที่</label><select id="swal-studentNumber" class="form-control"></select></div></div><div class="form-grid"><div class="form-group"><label>รหัสนักเรียน</label><input id="swal-studentId" class="form-control" value="${rowData.studentId}"></div><div class="form-group"><label>ชื่อ-สกุล</label><input id="swal-fullName" class="form-control" value="${rowData.fullName}"></div><div class="form-group"><label>ชื่อเล่น</label><input id="swal-nickname" class="form-control" value="${rowData.nickname || ''}"></div></div><hr><div class="form-grid"><div class="form-group"><label>วันที่</label><input id="swal-recordDate" class="form-control" type="date" value="${rowData.recordDate}"></div><div class="form-group"><label>ประเภทความผิด</label><select id="swal-offenseType" class="form-control"><option value="ร้ายแรง">ร้ายแรง</option><option value="ไม่ร้ายแรง">ไม่ร้ายแรง</option></select></div><div class="form-group"><label>ครั้งที่</label><select id="swal-occurrence" class="form-control"></select></div></div><div class="form-group"><label>พฤติกรรม</label><select id="swal-behavior" class="form-control"></select></div><div class="form-group"><label>หมายเหตุ</label><textarea id="swal-notes" class="swal2-textarea">${rowData.notes}</textarea></div></div>`;
 
             const { value: formValues } = await Swal.fire({
-                title: 'แก้ไขข้อมูล',
-                html: modalHtml,
-                width: '80%',
+                title: 'แก้ไขข้อมูล', html: modalHtml, width: '80%',
                 didOpen: () => {
-                    const levelEl = document.getElementById('swal-level');
-                    populateDropdown(levelEl, 1, 6, i => ({ value: `ม.${i}`, text: `ม.${i}` }));
-                    levelEl.value = rowData.level;
-
-                    const classEl = document.getElementById('swal-classroom');
-                    populateDropdown(classEl, 1, 18, i => ({ value: i, text: `ห้อง ${i}` }));
-                    classEl.value = rowData.classroom;
-                    
-                    const numEl = document.getElementById('swal-studentNumber');
-                    populateDropdown(numEl, 1, 50, i => ({ value: i, text: i }));
-                    numEl.value = rowData.studentNumber;
-
-                    const occEl = document.getElementById('swal-occurrence');
-                    populateDropdown(occEl, 1, 20, i => ({ value: i, text: `ครั้งที่ ${i}` }));
-                    occEl.value = rowData.occurrence;
-
+                    populateDropdown(document.getElementById('swal-level'), 1, 6, i => ({ value: `ม.${i}`, text: `ม.${i}` }), rowData.level);
+                    populateDropdown(document.getElementById('swal-classroom'), 1, 18, i => ({ value: i, text: `ห้อง ${i}` }), rowData.classroom);
+                    populateDropdown(document.getElementById('swal-studentNumber'), 1, 50, i => ({ value: i, text: i }), rowData.studentNumber);
+                    populateDropdown(document.getElementById('swal-occurrence'), 1, 20, i => ({ value: i, text: `ครั้งที่ ${i}` }), rowData.occurrence);
                     const offenseEl = document.getElementById('swal-offenseType');
                     offenseEl.value = rowData.offenseType;
                     offenseEl.addEventListener('change', (e) => updateBehaviorDropdown(e.target.value, document.getElementById('swal-behavior')));
-                    
                     updateBehaviorDropdown(rowData.offenseType, document.getElementById('swal-behavior'), rowData.behavior);
                 },
                 focusConfirm: false,
@@ -511,27 +493,100 @@
                     occurrence: document.getElementById('swal-occurrence').value, behavior: document.getElementById('swal-behavior').value,
                     notes: document.getElementById('swal-notes').value
                 }),
-                showCancelButton: true,
-                confirmButtonText: '<i class="fas fa-save"></i> บันทึก',
-                cancelButtonText: 'ยกเลิก',
+                showCancelButton: true, confirmButtonText: '<i class="fas fa-save"></i> บันทึก', cancelButtonText: 'ยกเลิก',
             });
 
             if (formValues) {
                 Swal.fire({ title: 'กำลังอัปเดต...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                 const params = new URLSearchParams({ action: 'full_update', rowId, ...formValues });
-                
                 try {
                     const res = await fetch(SCRIPT_URL, { method: 'POST', body: params });
                     const result = await res.json();
                     if (result.status === 'success') {
                         Swal.fire('สำเร็จ!', 'อัปเดตข้อมูลเรียบร้อย', 'success');
                         allData = []; // Clear cache to force re-fetch
-                        fetchDataAndView(); // Refresh table
+                        fetchDataAndView();
+                        fetchAllData().then(() => renderSummaryTable(allData));
                     } else { throw new Error(result.message); }
                 } catch (error) { Swal.fire('ผิดพลาด!', error.message, 'error'); }
             }
         }
         
+        async function deleteRow(rowId) {
+            const result = await Swal.fire({
+                title: 'คุณแน่ใจหรือไม่?', text: "ข้อมูลนี้จะถูกลบอย่างถาวร!", icon: 'warning',
+                showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6',
+                confirmButtonText: 'ใช่, ลบเลย!', cancelButtonText: 'ยกเลิก'
+            });
+
+            if (result.isConfirmed) {
+                Swal.fire({ title: 'กำลังลบ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                const params = new URLSearchParams({ action: 'delete', rowId: rowId });
+                try {
+                    const res = await fetch(SCRIPT_URL, { method: 'POST', body: params });
+                    const result = await res.json();
+                    if (result.status === 'success') {
+                        Swal.fire('ลบแล้ว!', 'ข้อมูลถูกลบเรียบร้อย', 'success');
+                        allData = []; // Clear cache
+                        fetchDataAndView();
+                        fetchAllData().then(() => renderSummaryTable(allData));
+                    } else { throw new Error(result.message); }
+                } catch (error) { Swal.fire('ผิดพลาด!', error.message, 'error'); }
+            }
+        }
+        
+        // --- Summary Page Table Filter ---
+        function setupSummaryTableFilters() {
+            const filterType = document.getElementById('summary-filter-type').value;
+            const container = document.getElementById('summary-filter-input-container');
+            let options = `
+                <option value="all">ทั้งหมด</option>
+                <option value="level">ระดับชั้น</option>
+                <option value="date">วันที่</option>
+                <option value="classroom">ห้อง</option>
+                <option value="student">รหัส/ชื่อ-สกุล</option>
+                <option value="offense_serious">ความผิดร้ายแรง</option>
+                <option value="offense_minor">ความผิดไม่ร้ายแรง</option>
+            `;
+            if(document.getElementById('summary-filter-type').innerHTML === "") document.getElementById('summary-filter-type').innerHTML = options;
+            
+            let inputHtml = '';
+            if (filterType === 'level') {
+                inputHtml = `<select id="summary-filter-value" class="form-control">${Array.from({length: 6}, (_, i) => `<option value="ม.${i+1}">ม.${i+1}</option>`).join('')}</select>`;
+            } else if (filterType === 'date') {
+                inputHtml = `<input type="date" id="summary-filter-value" class="form-control">`;
+            } else if (filterType === 'classroom') {
+                 inputHtml = `<select id="summary-filter-value" class="form-control">${Array.from({length: 18}, (_, i) => `<option value="${i+1}">ห้อง ${i+1}</option>`).join('')}</select>`;
+            } else if (filterType === 'student') {
+                inputHtml = `<input type="text" id="summary-filter-value" class="form-control" placeholder="รหัส, ชื่อ-สกุล...">`;
+            } else {
+                 inputHtml = ''; // No input for All, Serious, Minor
+            }
+            container.innerHTML = inputHtml;
+            if(inputHtml !== '') document.getElementById('summary-filter-value').style.width = 'auto';
+        }
+
+        async function filterSummaryTable() {
+            await fetchAllData();
+            const type = document.getElementById('summary-filter-type').value;
+            const valueEl = document.getElementById('summary-filter-value');
+            const value = valueEl ? valueEl.value : '';
+
+            const filtered = allData.filter(row => {
+                switch(type) {
+                    case 'all': return true;
+                    case 'level': return row.level === value;
+                    case 'date': return row.recordDate === value;
+                    case 'classroom': return row.classroom == value;
+                    case 'student': return row.studentId.includes(value) || row.fullName.toLowerCase().includes(value.toLowerCase());
+                    case 'offense_serious': return row.offenseType === 'ร้ายแรง';
+                    case 'offense_minor': return row.offenseType === 'ไม่ร้ายแรง';
+                    default: return true;
+                }
+            });
+            renderSummaryTable(filtered);
+        }
+
         // --- Charting Logic ---
         function handleFilterTypeChange(e) {
             const type = e.target.value;
@@ -552,7 +607,7 @@
             if (filterType === 'individual') {
                 const keyword = document.getElementById('individual-keyword').value.toLowerCase();
                 if (keyword === '') return [];
-                return allData.filter(row => row.fullName.toLowerCase().includes(keyword) || row.nickname.toLowerCase().includes(keyword) || row.studentId.includes(keyword));
+                return allData.filter(row => row.fullName.toLowerCase().includes(keyword) || (row.nickname && row.nickname.toLowerCase().includes(keyword)) || row.studentId.includes(keyword));
             }
             return [];
         }
@@ -562,26 +617,26 @@
             const filterType = document.getElementById('filter-type').value;
             const wrapper = document.getElementById('charts-wrapper');
 
-            // Clear previous charts and containers
             Object.values(charts).forEach(chart => chart.destroy());
             charts = {};
             wrapper.innerHTML = '';
 
             if (data.length === 0) {
-                wrapper.innerHTML = '<p style="text-align: center;">ไม่พบข้อมูลสำหรับสร้างกราฟ</p>';
+                wrapper.innerHTML = '<p style="text-align: center; margin-top: 20px;">ไม่พบข้อมูลสำหรับสร้างกราฟ</p>';
                 return;
             }
             
             if (filterType === 'all') {
-                wrapper.innerHTML = `<div class="chart-grid"><div id="chart-container-1"></div><div id="chart-container-2"></div></div><div id="chart-container-3"></div>`;
+                wrapper.innerHTML = `<div class="chart-grid"><div id="chart-container-1"></div><div id="chart-container-2"></div></div><div class="chart-grid"><div id="chart-container-3"></div><div id="chart-container-4"></div></div>`;
                 createChart(data, 'bar', 'chart-container-1', 'พฤติกรรมแยกตามระดับชั้น', 'level');
-                createChart(data, 'bar', 'chart-container-2', 'พฤติกรรมแยกตามเดือน', 'month');
-                createChart(data, 'doughnut', 'chart-container-3', 'ประเภทพฤติกรรม (ภาพรวม)', 'behavior');
+                createChart(data, 'doughnut', 'chart-container-2', 'ประเภทพฤติกรรม (ภาพรวม)', 'behavior');
+                createChart(data, 'bar', 'chart-container-3', 'พฤติกรรมแยกตามเดือน', 'month');
+                createChart(data, 'bar', 'chart-container-4', '10 อันดับนักเรียนที่ถูกบันทึกข้อมูลสูงสุด', 'student');
             } else if (filterType === 'level') {
                 wrapper.innerHTML = `<div class="chart-grid"><div id="chart-container-1"></div><div id="chart-container-2"></div></div><div class="chart-grid"><div id="chart-container-3"></div><div id="chart-container-4"></div></div>`;
                 createChart(data, 'bar', 'chart-container-1', 'พฤติกรรมแยกตามห้องเรียน', 'classroom');
-                createChart(data, 'bar', 'chart-container-2', 'พฤติกรรมแยกตามเดือน', 'month');
-                createChart(data, 'doughnut', 'chart-container-3', 'ประเภทพฤติกรรม', 'behavior');
+                createChart(data, 'doughnut', 'chart-container-2', 'ประเภทพฤติกรรม', 'behavior');
+                createChart(data, 'bar', 'chart-container-3', 'พฤติกรรมแยกตามเดือน', 'month');
                 createChart(data, 'bar', 'chart-container-4', 'นักเรียนที่มีพฤติกรรม (Top 10)', 'student');
             } else if (filterType === 'individual') {
                 wrapper.innerHTML = `<div class="chart-grid"><div id="chart-container-1"></div><div id="chart-container-2"></div></div>`;
@@ -601,7 +656,7 @@
                 if (groupBy === 'month') key = new Date(row.recordDate).toLocaleString('th-TH', { month: 'long', year: 'numeric' });
                 else if (groupBy === 'classroom') key = `ห้อง ${row.classroom}`;
                 else if (groupBy === 'student') key = row.fullName;
-                else key = row[groupBy]; // level, behavior
+                else key = row[groupBy];
                 
                 acc[key] = (acc[key] || 0) + 1;
                 return acc;
@@ -616,9 +671,7 @@
                 chartData = sorted.map(item => item[1]);
             }
             
-            const backgroundColors = (type === 'doughnut') 
-                ? ['#003366', '#6699CC', '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
-                : '#003366';
+            const backgroundColors = labels.map((_, i) => CHART_COLORS[i % CHART_COLORS.length]);
 
             charts[containerId] = new Chart(ctx, {
                 type: type,
@@ -628,7 +681,7 @@
                         label: 'จำนวนครั้ง',
                         data: chartData,
                         backgroundColor: backgroundColors,
-                        borderColor: '#ffffff',
+                        borderColor: type === 'doughnut' ? '#ffffff' : backgroundColors,
                         borderWidth: 1
                     }]
                 },
@@ -637,7 +690,7 @@
                     maintainAspectRatio: true,
                     plugins: {
                         title: { display: true, text: title, font: { size: 16 } },
-                        legend: { position: type === 'doughnut' ? 'right' : 'top', display: type !== 'bar'}
+                        legend: { position: type === 'doughnut' ? 'right' : 'top', display: type !== 'bar' || groupBy === 'student'}
                     },
                     scales: (type === 'bar') ? { y: { beginAtZero: true, ticks: { stepSize: 1 } } } : {}
                 }
