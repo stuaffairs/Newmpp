@@ -238,26 +238,18 @@
                 </div>
             </div>
             <div class="card">
-                <h3><i class="fas fa-chart-pie"></i> กรองข้อมูลกราฟ</h3>
+                <h3><i class="fas fa-chart-pie"></i> สรุปข้อมูลแบบกราฟ</h3>
                 <div id="chart-filter-controls" class="form-grid">
                     <div class="form-group">
                         <label for="filter-type">เลือกรูปแบบการกรอง</label>
                         <select id="filter-type" class="form-control">
                             <option value="all">ภาพรวมทั้งหมด</option>
                             <option value="level">รายระดับชั้น</option>
-                            <option value="individual">รายบุคคล</option>
                         </select>
                     </div>
                     <div class="form-group" id="level-filter-group" style="display: none;">
                         <label for="level-filter">เลือกระดับชั้น</label>
                         <select id="level-filter" class="form-control"></select>
-                    </div>
-                    <div class="form-group" id="individual-filter-group" style="display: none;">
-                        <label for="individual-keyword">ค้นหานักเรียน (รหัส, ชื่อ-สกุล, ชื่อเล่น)</label>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="text" id="individual-keyword" class="form-control" placeholder="ป้อนข้อมูล...">
-                            <button id="individual-search-btn" class="btn btn-secondary"><i class="fas fa-search"></i></button>
-                        </div>
                     </div>
                 </div>
                 <div id="charts-wrapper">
@@ -329,7 +321,6 @@
             // Chart Filter Listeners
             document.getElementById('filter-type').addEventListener('change', handleFilterTypeChange);
             document.getElementById('level-filter').addEventListener('change', updateCharts);
-            document.getElementById('individual-search-btn').addEventListener('click', updateCharts);
 
             fetchAllData().then(() => {
                 renderSummaryTable(allData);
@@ -417,7 +408,7 @@
                     <td>${row.studentId}</td>
                     <td>${row.level}</td>
                     <td>ครั้งที่ ${row.occurrence}</td>
-                    <td><span style="color: ${row.offenseType === 'ร้ายแรง' ? 'red' : 'green'};">${row.offenseType}</span></td>
+                    <td><span style="color: ${row.offenseType === 'ร้ายแรง' ? 'red' : 'green'}; font-weight: bold;">${row.offenseType}</span></td>
                     <td>${row.behavior}</td>
                     <td>
                         <button class="btn btn-secondary btn-sm" onclick="openEditModal('${row.rowId}')" style="padding: 5px 10px;"><i class="fas fa-edit"></i></button>
@@ -444,7 +435,7 @@
                     <td>${row.fullName}</td>
                     <td>${row.nickname || '-'}</td>
                     <td>${row.studentId}</td>
-                    <td><span style="color: ${row.offenseType === 'ร้ายแรง' ? 'red' : 'green'};">${row.offenseType}</span></td>
+                    <td><span style="color: ${row.offenseType === 'ร้ายแรง' ? 'red' : 'green'}; font-weight: bold;">${row.offenseType}</span></td>
                     <td>ครั้งที่ ${row.occurrence}</td>
                     <td>${row.behavior}</td>
                     <td>
@@ -537,28 +528,31 @@
         
         // --- Summary Page Table Filter ---
         function setupSummaryTableFilters() {
-            const filterType = document.getElementById('summary-filter-type').value;
+            const filterTypeEl = document.getElementById('summary-filter-type');
+            const currentFilter = filterTypeEl.value;
             const container = document.getElementById('summary-filter-input-container');
-            let options = `
-                <option value="all">ทั้งหมด</option>
-                <option value="level">ระดับชั้น</option>
-                <option value="date">วันที่</option>
-                <option value="classroom">ห้อง</option>
-                <option value="student">รหัส/ชื่อ-สกุล</option>
-                <option value="offense_serious">ความผิดร้ายแรง</option>
-                <option value="offense_minor">ความผิดไม่ร้ายแรง</option>
-            `;
-            if(document.getElementById('summary-filter-type').innerHTML === "") document.getElementById('summary-filter-type').innerHTML = options;
             
+            if(filterTypeEl.innerHTML === "") {
+                filterTypeEl.innerHTML = `
+                    <option value="all">ทั้งหมด</option>
+                    <option value="level">ระดับชั้น</option>
+                    <option value="date">วันที่</option>
+                    <option value="month">เดือน</option>
+                    <option value="classroom">ห้อง</option>
+                    <option value="offense_serious">ความผิดร้ายแรง</option>
+                    <option value="offense_minor">ความผิดไม่ร้ายแรง</option>
+                `;
+            }
+
             let inputHtml = '';
-            if (filterType === 'level') {
+            if (currentFilter === 'level') {
                 inputHtml = `<select id="summary-filter-value" class="form-control">${Array.from({length: 6}, (_, i) => `<option value="ม.${i+1}">ม.${i+1}</option>`).join('')}</select>`;
-            } else if (filterType === 'date') {
+            } else if (currentFilter === 'date') {
                 inputHtml = `<input type="date" id="summary-filter-value" class="form-control">`;
-            } else if (filterType === 'classroom') {
+            } else if (currentFilter === 'month') {
+                inputHtml = `<input type="month" id="summary-filter-value" class="form-control">`;
+            } else if (currentFilter === 'classroom') {
                  inputHtml = `<select id="summary-filter-value" class="form-control">${Array.from({length: 18}, (_, i) => `<option value="${i+1}">ห้อง ${i+1}</option>`).join('')}</select>`;
-            } else if (filterType === 'student') {
-                inputHtml = `<input type="text" id="summary-filter-value" class="form-control" placeholder="รหัส, ชื่อ-สกุล...">`;
             } else {
                  inputHtml = ''; // No input for All, Serious, Minor
             }
@@ -577,8 +571,8 @@
                     case 'all': return true;
                     case 'level': return row.level === value;
                     case 'date': return row.recordDate === value;
-                    case 'classroom': return row.classroom == value;
-                    case 'student': return row.studentId.includes(value) || row.fullName.toLowerCase().includes(value.toLowerCase());
+                    case 'month': return row.recordDate.startsWith(value); // YYYY-MM
+                    case 'classroom': return row.classroom == value.replace('ห้อง ','');
                     case 'offense_serious': return row.offenseType === 'ร้ายแรง';
                     case 'offense_minor': return row.offenseType === 'ไม่ร้ายแรง';
                     default: return true;
@@ -591,7 +585,6 @@
         function handleFilterTypeChange(e) {
             const type = e.target.value;
             document.getElementById('level-filter-group').style.display = (type === 'level') ? 'block' : 'none';
-            document.getElementById('individual-filter-group').style.display = (type === 'individual') ? 'block' : 'none';
             updateCharts();
         }
 
@@ -603,11 +596,6 @@
             if (filterType === 'level') {
                 const selectedLevel = document.getElementById('level-filter').value;
                 return allData.filter(row => row.level === selectedLevel);
-            }
-            if (filterType === 'individual') {
-                const keyword = document.getElementById('individual-keyword').value.toLowerCase();
-                if (keyword === '') return [];
-                return allData.filter(row => row.fullName.toLowerCase().includes(keyword) || (row.nickname && row.nickname.toLowerCase().includes(keyword)) || row.studentId.includes(keyword));
             }
             return [];
         }
@@ -638,11 +626,6 @@
                 createChart(data, 'doughnut', 'chart-container-2', 'ประเภทพฤติกรรม', 'behavior');
                 createChart(data, 'bar', 'chart-container-3', 'พฤติกรรมแยกตามเดือน', 'month');
                 createChart(data, 'bar', 'chart-container-4', 'นักเรียนที่มีพฤติกรรม (Top 10)', 'student');
-            } else if (filterType === 'individual') {
-                wrapper.innerHTML = `<div class="chart-grid"><div id="chart-container-1"></div><div id="chart-container-2"></div></div>`;
-                const studentName = data.length > 0 ? data[0].fullName : 'นักเรียน';
-                createChart(data, 'doughnut', 'chart-container-1', `ประเภทพฤติกรรม (${studentName})`, 'behavior');
-                createChart(data, 'bar', 'chart-container-2', `พฤติกรรมรายเดือน (${studentName})`, 'month');
             }
         }
 
