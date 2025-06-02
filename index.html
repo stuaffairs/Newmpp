@@ -261,21 +261,15 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="level">ระดับชั้น</label>
-                            <select id="level" name="level" class="form-control" required>
-                                ${Array.from({length: 6}, (_, i) => `<option value="ม.${i+1}">ม.${i+1}</option>`).join('')}
-                            </select>
+                            <select id="level" name="level" class="form-control" required></select>
                         </div>
                         <div class="form-group">
                             <label for="classroom">ห้องเรียน</label>
-                            <select id="classroom" name="classroom" class="form-control" required>
-                                ${Array.from({length: 18}, (_, i) => `<option value="${i+1}">ห้อง ${i+1}</option>`).join('')}
-                            </select>
+                            <select id="classroom" name="classroom" class="form-control" required></select>
                         </div>
                         <div class="form-group">
                             <label for="studentNumber">เลขที่</label>
-                            <select id="studentNumber" name="studentNumber" class="form-control" required>
-                                ${Array.from({length: 50}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('')}
-                            </select>
+                            <select id="studentNumber" name="studentNumber" class="form-control" required></select>
                         </div>
                          <div class="form-group">
                             <label for="studentId">รหัสประจำตัวนักเรียน</label>
@@ -306,9 +300,7 @@
                         </div>
                         <div class="form-group">
                             <label for="occurrence">ครั้งที่</label>
-                            <select id="occurrence" name="occurrence" class="form-control" required>
-                                ${Array.from({length: 20}, (_, i) => `<option value="${i+1}">ครั้งที่ ${i+1}</option>`).join('')}
-                            </select>
+                            <select id="occurrence" name="occurrence" class="form-control" required></select>
                         </div>
                     </div>
                     <div class="form-group">
@@ -343,9 +335,7 @@
                 <div class="search-filters">
                     <input type="text" id="search-keyword" placeholder="ค้นหาจากชื่อ, ชื่อเล่น, รหัสนักเรียน...">
                     <select id="search-class">
-                        <option value="">ค้นหาทุกห้อง</option>
-                        ${Array.from({length: 18}, (_, i) => `<option value="${i+1}">ห้อง ${i+1}</option>`).join('')}
-                    </select>
+                        </select>
                     <button id="search-btn" class="btn btn-secondary"><i class="fas fa-search"></i> ค้นหา</button>
                      <a href="https://docs.google.com/spreadsheets/d/18y2awmDybmsbq1NAXedByAdrAKwKLC8CYy32032M0iw" target="_blank" class="btn btn-success"><i class="fab fa-google-drive"></i> เปิด Google Sheet</a>
                 </div>
@@ -366,8 +356,7 @@
                                 <th>ไฟล์แนบ</th>
                             </tr>
                         </thead>
-                        <tbody id="view-table-body">
-                            </tbody>
+                        <tbody id="view-table-body"></tbody>
                     </table>
                 </div>
             </div>
@@ -393,8 +382,7 @@
                                 <th>การจัดการ</th>
                             </tr>
                         </thead>
-                        <tbody id="summary-table-body">
-                             </tbody>
+                        <tbody id="summary-table-body"></tbody>
                     </table>
                 </div>
             </div>
@@ -428,7 +416,44 @@
         let allData = [];
         let chartByClass, chartByMonth, chartByBehavior;
 
+        // ** START OF FIX **
+        function populateDropdowns() {
+            const levelSelect = document.getElementById('level');
+            const classroomSelect = document.getElementById('classroom');
+            const studentNumberSelect = document.getElementById('studentNumber');
+            const occurrenceSelect = document.getElementById('occurrence');
+            const searchClassSelect = document.getElementById('search-class');
+
+            // Level (ม.1 - ม.6)
+            for (let i = 1; i <= 6; i++) {
+                levelSelect.innerHTML += `<option value="ม.${i}">ม.${i}</option>`;
+            }
+
+            // Classroom (ห้อง 1 - 18)
+            classroomSelect.innerHTML = '';
+            searchClassSelect.innerHTML = '<option value="">ค้นหาทุกห้อง</option>';
+            for (let i = 1; i <= 18; i++) {
+                const option = `<option value="${i}">ห้อง ${i}</option>`;
+                classroomSelect.innerHTML += option;
+                searchClassSelect.innerHTML += option;
+            }
+
+            // Student Number (เลขที่ 1 - 50)
+            for (let i = 1; i <= 50; i++) {
+                studentNumberSelect.innerHTML += `<option value="${i}">${i}</option>`;
+            }
+
+            // Occurrence (ครั้งที่ 1 - 20)
+            for (let i = 1; i <= 20; i++) {
+                occurrenceSelect.innerHTML += `<option value="${i}">ครั้งที่ ${i}</option>`;
+            }
+        }
+        // ** END OF FIX **
+
+
         document.addEventListener('DOMContentLoaded', () => {
+            populateDropdowns(); // <-- Call the new function to populate dropdowns
+
             // Set default date
             document.getElementById('recordDate').valueAsDate = new Date();
 
@@ -525,6 +550,7 @@
                     Swal.fire('สำเร็จ!', 'บันทึกข้อมูลเรียบร้อย', 'success');
                     form.reset();
                     document.getElementById('recordDate').valueAsDate = new Date();
+                    populateDropdowns(); // Re-populate after reset
                     fetchDataAndSummarize({ isSearch: false }); // Refresh data
                 } else {
                     throw new Error(result.message || 'เกิดข้อผิดพลาดในการบันทึก');
