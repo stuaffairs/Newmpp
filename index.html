@@ -42,18 +42,8 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        header h1 {
-            font-size: var(--header-font-size);
-            font-weight: bold;
-            margin: 0;
-        }
-
-        header h2 {
-            font-size: var(--subheader-font-size);
-            font-weight: normal;
-            margin: 5px 0 0 0;
-            opacity: 0.9;
-        }
+        header h1 { font-size: var(--header-font-size); font-weight: bold; margin: 0; }
+        header h2 { font-size: var(--subheader-font-size); font-weight: normal; margin: 5px 0 0 0; opacity: 0.9; }
 
         nav {
             display: flex;
@@ -83,14 +73,8 @@
             border-bottom: 3px solid var(--secondary-color);
         }
         
-        .page {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .page.active {
-            display: block;
-        }
+        .page { display: none; margin-top: 20px; }
+        .page.active { display: block; }
 
         .card {
             background-color: var(--light-color);
@@ -100,17 +84,8 @@
             margin-bottom: 20px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: var(--primary-color);
-        }
-
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 8px; color: var(--primary-color); }
         .form-control, select, textarea {
             width: 100%;
             padding: 12px;
@@ -120,123 +95,43 @@
             box-sizing: border-box;
             transition: border-color 0.3s;
         }
-
-        .form-control:focus, select:focus, textarea:focus {
-            border-color: var(--secondary-color);
-            outline: none;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .btn {
-            padding: 12px 25px;
-            font-size: 1.1em;
-            border-radius: 5px;
-            cursor: pointer;
-            border: none;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .form-control:focus, select:focus, textarea:focus { border-color: var(--secondary-color); outline: none; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: var(--light-color);
-        }
+        .btn { padding: 12px 25px; font-size: 1.1em; border-radius: 5px; cursor: pointer; border: none; font-weight: bold; transition: background-color 0.3s, transform 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary { background-color: var(--primary-color); color: var(--light-color); }
         .btn-primary:hover { background-color: #004488; }
-        
-        .btn-secondary {
-            background-color: var(--secondary-color);
-            color: var(--light-color);
-        }
+        .btn-secondary { background-color: var(--secondary-color); color: var(--light-color); }
         .btn-secondary:hover { background-color: #5588bb; }
-
-        .btn-danger {
-            background-color: #dc3545;
-            color: var(--light-color);
-        }
+        .btn-danger { background-color: #dc3545; color: var(--light-color); }
         .btn-danger:hover { background-color: #c82333; }
-        
-        .btn-success {
-             background-color: #28a745;
-             color: var(--light-color);
-        }
+        .btn-success { background-color: #28a745; color: var(--light-color); }
         .btn-success:hover { background-color: #218838; }
 
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-            vertical-align: middle;
-        }
-
-        thead {
-            background-color: #f0f4f8;
-        }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        thead { background-color: #f0f4f8; }
+        th { font-weight: bold; color: var(--primary-color); }
+        tbody tr:hover { background-color: #f9f9f9; }
         
-        th {
-            font-weight: bold;
-            color: var(--primary-color);
-        }
+        .search-filters { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
+        .search-filters input, .search-filters select { padding: 10px; border: 1px solid var(--border-color); border-radius: 5px; }
         
-        tbody tr:hover {
-            background-color: #f9f9f9;
-        }
-        
-        .search-filters {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+        .chart-container { width: 100%; margin-top: 20px; }
+        .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
-        .search-filters input, .search-filters select {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-        }
-        
-        .chart-container {
-             width: 100%;
-             margin-top: 20px;
-        }
+        #chart-filter-controls .form-group { margin-bottom: 10px; }
 
+        @media (max-width: 992px) {
+            .chart-grid { grid-template-columns: 1fr; }
+        }
         @media (max-width: 768px) {
-            :root {
-                --header-font-size: 2em;
-                --subheader-font-size: 1.2em;
-            }
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            nav {
-                flex-direction: column;
-            }
-            .nav-button {
-                text-align: left;
-                border-bottom: 1px solid var(--border-color);
-            }
+            :root { --header-font-size: 2em; --subheader-font-size: 1.2em; }
+            .form-grid { grid-template-columns: 1fr; }
+            nav { flex-direction: column; }
+            .nav-button { text-align: left; border-bottom: 1px solid var(--border-color); }
         }
     </style>
 </head>
@@ -255,75 +150,29 @@
         </nav>
 
         <div id="page-form" class="page active">
-            <div class="card">
+             <div class="card">
                 <form id="behaviorForm">
                     <h3><i class="fas fa-user-plus"></i> ข้อมูลนักเรียนและพฤติกรรม</h3>
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label for="level">ระดับชั้น</label>
-                            <select id="level" name="level" class="form-control" required></select>
-                        </div>
-                        <div class="form-group">
-                            <label for="classroom">ห้องเรียน</label>
-                            <select id="classroom" name="classroom" class="form-control" required></select>
-                        </div>
-                        <div class="form-group">
-                            <label for="studentNumber">เลขที่</label>
-                            <select id="studentNumber" name="studentNumber" class="form-control" required></select>
-                        </div>
-                         <div class="form-group">
-                            <label for="studentId">รหัสประจำตัวนักเรียน</label>
-                            <input type="text" id="studentId" name="studentId" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="fullName">ชื่อ-สกุล</label>
-                            <input type="text" id="fullName" name="fullName" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="nickname">ชื่อเล่น</label>
-                            <input type="text" id="nickname" name="nickname" class="form-control">
-                        </div>
+                        <div class="form-group"><label for="level">ระดับชั้น</label><select id="level" name="level" class="form-control" required></select></div>
+                        <div class="form-group"><label for="classroom">ห้องเรียน</label><select id="classroom" name="classroom" class="form-control" required></select></div>
+                        <div class="form-group"><label for="studentNumber">เลขที่</label><select id="studentNumber" name="studentNumber" class="form-control" required></select></div>
+                        <div class="form-group"><label for="studentId">รหัสประจำตัวนักเรียน</label><input type="text" id="studentId" name="studentId" class="form-control" required></div>
+                        <div class="form-group"><label for="fullName">ชื่อ-สกุล</label><input type="text" id="fullName" name="fullName" class="form-control" required></div>
+                        <div class="form-group"><label for="nickname">ชื่อเล่น</label><input type="text" id="nickname" name="nickname" class="form-control"></div>
                     </div>
                     <hr>
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label for="recordDate">วันที่</label>
-                            <input type="date" id="recordDate" name="recordDate" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="offenseType">ประเภทความผิด</label>
-                            <select id="offenseType" name="offenseType" class="form-control" required>
-                                <option value="">-- เลือกประเภท --</option>
-                                <option value="ร้ายแรง">ร้ายแรง</option>
-                                <option value="ไม่ร้ายแรง">ไม่ร้ายแรง</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="occurrence">ครั้งที่</label>
-                            <select id="occurrence" name="occurrence" class="form-control" required></select>
-                        </div>
+                        <div class="form-group"><label for="recordDate">วันที่</label><input type="date" id="recordDate" name="recordDate" class="form-control" required></div>
+                        <div class="form-group"><label for="offenseType">ประเภทความผิด</label><select id="offenseType" name="offenseType" class="form-control" required><option value="">-- เลือกประเภท --</option><option value="ร้ายแรง">ร้ายแรง</option><option value="ไม่ร้ายแรง">ไม่ร้ายแรง</option></select></div>
+                        <div class="form-group"><label for="occurrence">ครั้งที่</label><select id="occurrence" name="occurrence" class="form-control" required></select></div>
                     </div>
-                    <div class="form-group">
-                        <label for="behavior">พฤติกรรม</label>
-                        <select id="behavior" name="behavior" class="form-control" required>
-                            <option value="">-- กรุณาเลือกประเภทความผิดก่อน --</option>
-                        </select>
+                    <div class="form-group"><label for="behavior">พฤติกรรม</label><select id="behavior" name="behavior" class="form-control" required><option value="">-- กรุณาเลือกประเภทความผิดก่อน --</option></select></div>
+                    <div class="form-group"><label for="notes">หมายเหตุ</label><textarea id="notes" name="notes" rows="3" class="form-control"></textarea></div>
+                    <div class="form-grid">
+                        <div class="form-group"><label for="docFile">แนบไฟล์เอกสาร (PDF, DOCX)</label><input type="file" id="docFile" name="docFile" class="form-control" accept=".pdf,.doc,.docx"></div>
+                        <div class="form-group"><label for="imgFile">แนบไฟล์รูปภาพ (JPG, PNG)</label><input type="file" id="imgFile" name="imgFile" class="form-control" accept="image/jpeg,image/png"></div>
                     </div>
-                    <div class="form-group">
-                        <label for="notes">หมายเหตุ</label>
-                        <textarea id="notes" name="notes" rows="3" class="form-control"></textarea>
-                    </div>
-                     <div class="form-grid">
-                        <div class="form-group">
-                            <label for="docFile">แนบไฟล์เอกสาร (PDF, DOCX)</label>
-                            <input type="file" id="docFile" name="docFile" class="form-control" accept=".pdf,.doc,.docx">
-                        </div>
-                        <div class="form-group">
-                            <label for="imgFile">แนบไฟล์รูปภาพ (JPG, PNG)</label>
-                            <input type="file" id="imgFile" name="imgFile" class="form-control" accept="image/jpeg,image/png">
-                        </div>
-                    </div>
-
                     <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> บันทึกข้อมูล</button>
                 </form>
             </div>
@@ -334,8 +183,7 @@
                 <h3><i class="fas fa-search"></i> ค้นหาข้อมูลนักเรียน</h3>
                 <div class="search-filters">
                     <input type="text" id="search-keyword" placeholder="ค้นหาจากชื่อ, ชื่อเล่น, รหัสนักเรียน...">
-                    <select id="search-class">
-                        </select>
+                    <select id="search-class"></select>
                     <button id="search-btn" class="btn btn-secondary"><i class="fas fa-search"></i> ค้นหา</button>
                      <a href="https://docs.google.com/spreadsheets/d/18y2awmDybmsbq1NAXedByAdrAKwKLC8CYy32032M0iw" target="_blank" class="btn btn-success"><i class="fab fa-google-drive"></i> เปิด Google Sheet</a>
                 </div>
@@ -344,16 +192,13 @@
                         <thead>
                             <tr>
                                 <th>วันที่</th>
+                                <th>ชื่อ-สกุล</th>
+                                <th>รหัสนักเรียน</th>
                                 <th>ระดับชั้น</th>
                                 <th>ห้อง</th>
-                                <th>เลขที่</th>
-                                <th>รหัสนักเรียน</th>
-                                <th>ชื่อ-สกุล</th>
-                                <th>ชื่อเล่น</th>
-                                <th>ประเภทความผิด</th>
+                                <th>ครั้งที่</th>
                                 <th>พฤติกรรม</th>
-                                <th>หมายเหตุ</th>
-                                <th>ไฟล์แนบ</th>
+                                <th>การจัดการ</th>
                             </tr>
                         </thead>
                         <tbody id="view-table-body"></tbody>
@@ -364,35 +209,52 @@
 
         <div id="page-summary" class="page">
             <div class="card">
-                <h3><i class="fas fa-tasks"></i> จัดการและสรุปข้อมูล</h3>
-                 <div class="search-filters">
-                    <input type="text" id="summary-search-keyword" placeholder="ค้นหาจากชื่อ, รหัสนักเรียน...">
-                    <button id="summary-search-btn" class="btn btn-secondary"><i class="fas fa-search"></i> ค้นหา</button>
-                    <button id="summary-show-all-btn" class="btn btn-secondary"><i class="fas fa-list"></i> แสดงทั้งหมด</button>
-                     <a href="https://docs.google.com/spreadsheets/d/18y2awmDybmsbq1NAXedByAdrAKwKLC8CYy32032M0iw" target="_blank" class="btn btn-success"><i class="fab fa-google-drive"></i> เปิด Google Sheet</a>
-                </div>
+                <h3><i class="fas fa-file-alt"></i> สรุปข้อมูลทั้งหมด</h3>
                 <div class="table-container">
                     <table id="summary-table">
                         <thead>
                             <tr>
                                 <th>วันที่</th>
-                                <th>ชื่อ-สกุล</th>
+                                <th>ระดับชั้น</th>
                                 <th>ห้อง</th>
+                                <th>เลขที่</th>
+                                <th>รหัสนักเรียน</th>
+                                <th>ชื่อ-สกุล</th>
+                                <th>ประเภทความผิด</th>
+                                <th>ครั้งที่</th>
                                 <th>พฤติกรรม</th>
-                                <th>การจัดการ</th>
+                                <th>ไฟล์แนบ</th>
                             </tr>
                         </thead>
                         <tbody id="summary-table-body"></tbody>
                     </table>
                 </div>
             </div>
-             <div class="card">
-                <h3><i class="fas fa-chart-bar"></i> กราฟสรุปข้อมูล</h3>
-                <div class="form-grid">
-                    <div class="chart-container"><canvas id="chartByClass"></canvas></div>
-                    <div class="chart-container"><canvas id="chartByMonth"></canvas></div>
+            <div class="card">
+                <h3><i class="fas fa-filter"></i> กรองข้อมูลกราฟ</h3>
+                <div id="chart-filter-controls" class="form-grid">
+                    <div class="form-group">
+                        <label for="filter-type">เลือกรูปแบบการกรอง</label>
+                        <select id="filter-type" class="form-control">
+                            <option value="all">ภาพรวมทั้งหมด</option>
+                            <option value="level">รายระดับชั้น</option>
+                            <option value="individual">รายบุคคล</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="level-filter-group" style="display: none;">
+                        <label for="level-filter">เลือกระดับชั้น</label>
+                        <select id="level-filter" class="form-control"></select>
+                    </div>
+                    <div class="form-group" id="individual-filter-group" style="display: none;">
+                        <label for="individual-keyword">ค้นหานักเรียน (รหัส, ชื่อ, ชื่อเล่น)</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="individual-keyword" class="form-control" placeholder="ป้อนข้อมูล...">
+                            <button id="individual-search-btn" class="btn btn-secondary"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
                 </div>
-                 <div class="chart-container" style="margin-top: 20px;"><canvas id="chartByBehavior"></canvas></div>
+                <div id="charts-wrapper">
+                    </div>
             </div>
         </div>
     </div>
@@ -414,77 +276,51 @@
         };
         
         let allData = [];
-        let chartByClass, chartByMonth, chartByBehavior;
+        let charts = {};
 
-        // ** START OF FIX **
-        function populateDropdowns() {
-            const levelSelect = document.getElementById('level');
-            const classroomSelect = document.getElementById('classroom');
-            const studentNumberSelect = document.getElementById('studentNumber');
-            const occurrenceSelect = document.getElementById('occurrence');
-            const searchClassSelect = document.getElementById('search-class');
-
-            // Level (ม.1 - ม.6)
-            for (let i = 1; i <= 6; i++) {
-                levelSelect.innerHTML += `<option value="ม.${i}">ม.${i}</option>`;
-            }
-
-            // Classroom (ห้อง 1 - 18)
-            classroomSelect.innerHTML = '';
-            searchClassSelect.innerHTML = '<option value="">ค้นหาทุกห้อง</option>';
-            for (let i = 1; i <= 18; i++) {
-                const option = `<option value="${i}">ห้อง ${i}</option>`;
-                classroomSelect.innerHTML += option;
-                searchClassSelect.innerHTML += option;
-            }
-
-            // Student Number (เลขที่ 1 - 50)
-            for (let i = 1; i <= 50; i++) {
-                studentNumberSelect.innerHTML += `<option value="${i}">${i}</option>`;
-            }
-
-            // Occurrence (ครั้งที่ 1 - 20)
-            for (let i = 1; i <= 20; i++) {
-                occurrenceSelect.innerHTML += `<option value="${i}">ครั้งที่ ${i}</option>`;
+        function populateDropdown(selectElement, start, end, formatFn) {
+            selectElement.innerHTML = '';
+            for (let i = start; i <= end; i++) {
+                const { value, text } = formatFn(i);
+                selectElement.innerHTML += `<option value="${value}">${text}</option>`;
             }
         }
-        // ** END OF FIX **
-
+        
+        function populateAllDropdowns() {
+            populateDropdown(document.getElementById('level'), 1, 6, i => ({ value: `ม.${i}`, text: `ม.${i}` }));
+            populateDropdown(document.getElementById('classroom'), 1, 18, i => ({ value: i, text: `ห้อง ${i}` }));
+            populateDropdown(document.getElementById('studentNumber'), 1, 50, i => ({ value: i, text: i }));
+            populateDropdown(document.getElementById('occurrence'), 1, 20, i => ({ value: i, text: `ครั้งที่ ${i}` }));
+            
+            const searchClassSelect = document.getElementById('search-class');
+            searchClassSelect.innerHTML = '<option value="">ค้นหาทุกห้อง</option>';
+            for (let i = 1; i <= 18; i++) { searchClassSelect.innerHTML += `<option value="${i}">ห้อง ${i}</option>`; }
+            
+            const levelFilterSelect = document.getElementById('level-filter');
+            levelFilterSelect.innerHTML = '';
+            for (let i = 1; i <= 6; i++) { levelFilterSelect.innerHTML += `<option value="ม.${i}">ม.${i}</option>`; }
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
-            populateDropdowns(); // <-- Call the new function to populate dropdowns
-
-            // Set default date
+            populateAllDropdowns();
             document.getElementById('recordDate').valueAsDate = new Date();
 
-            // Handle dynamic behavior dropdown
-            const offenseTypeEl = document.getElementById('offenseType');
-            const behaviorEl = document.getElementById('behavior');
-            offenseTypeEl.addEventListener('change', () => {
-                const selectedType = offenseTypeEl.value;
-                behaviorEl.innerHTML = '<option value="">-- เลือกพฤติกรรม --</option>';
-                if (behaviors[selectedType]) {
-                    behaviors[selectedType].forEach(b => {
-                        const option = document.createElement('option');
-                        option.value = b;
-                        option.textContent = b;
-                        behaviorEl.appendChild(option);
-                    });
-                }
+            document.getElementById('offenseType').addEventListener('change', (e) => {
+                updateBehaviorDropdown(e.target.value, document.getElementById('behavior'));
             });
 
-            // Handle form submission
             document.getElementById('behaviorForm').addEventListener('submit', handleFormSubmit);
-
-            // Page 2 Search
             document.getElementById('search-btn').addEventListener('click', () => fetchDataAndView());
+            
+            // Chart Filter Listeners
+            document.getElementById('filter-type').addEventListener('change', handleFilterTypeChange);
+            document.getElementById('level-filter').addEventListener('change', updateCharts);
+            document.getElementById('individual-search-btn').addEventListener('click', updateCharts);
 
-            // Page 3 Search
-            document.getElementById('summary-search-btn').addEventListener('click', () => fetchDataAndSummarize({ isSearch: true }));
-            document.getElementById('summary-show-all-btn').addEventListener('click', () => fetchDataAndSummarize({ isSearch: false }));
-
-            // Initial load for summary page
-            fetchDataAndSummarize({ isSearch: false });
+            fetchAllData().then(() => {
+                renderSummaryTable(allData);
+                updateCharts(); // Initial chart render
+            });
         });
 
         function showPage(pageId) {
@@ -497,101 +333,53 @@
 
         async function handleFormSubmit(e) {
             e.preventDefault();
-            Swal.fire({
-                title: 'กำลังบันทึกข้อมูล...',
-                text: 'กรุณารอสักครู่',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
+            Swal.fire({ title: 'กำลังบันทึกข้อมูล...', text: 'กรุณารอสักครู่', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
             const form = e.target;
-            const docFile = form.docFile.files[0];
-            const imgFile = form.imgFile.files[0];
-            
-            let docData = {};
-            let imgData = {};
-
-            if(docFile) {
-                const base64 = await fileToBase64(docFile);
-                docData = { base64, type: docFile.type, name: docFile.name };
-            }
-            if(imgFile) {
-                const base64 = await fileToBase64(imgFile);
-                imgData = { base64, type: imgFile.type, name: imgFile.name };
-            }
-
             const params = new URLSearchParams({
-                action: 'create',
-                timestamp: new Date().toLocaleString('th-TH'),
-                level: form.level.value,
-                classroom: form.classroom.value,
-                studentNumber: form.studentNumber.value,
-                studentId: form.studentId.value,
-                fullName: form.fullName.value,
-                nickname: form.nickname.value,
-                recordDate: form.recordDate.value,
-                offenseType: form.offenseType.value,
-                occurrence: form.occurrence.value,
-                behavior: form.behavior.value,
+                action: 'create', timestamp: new Date().toLocaleString('th-TH'), level: form.level.value,
+                classroom: form.classroom.value, studentNumber: form.studentNumber.value, studentId: form.studentId.value,
+                fullName: form.fullName.value, nickname: form.nickname.value, recordDate: form.recordDate.value,
+                offenseType: form.offenseType.value, occurrence: form.occurrence.value, behavior: form.behavior.value,
                 notes: form.notes.value,
-                documentData: JSON.stringify(docData),
-                imageData: JSON.stringify(imgData)
             });
 
             try {
-                const res = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: params
-                });
+                const res = await fetch(SCRIPT_URL, { method: 'POST', body: params });
                 const result = await res.json();
                 if (result.status === 'success') {
-                    Swal.fire('สำเร็จ!', 'บันทึกข้อมูลเรียบร้อย', 'success');
+                    Swal.fire('บันทึกสำเร็จ!', 'ข้อมูลถูกบันทึกลงในระบบเรียบร้อย', 'success');
                     form.reset();
                     document.getElementById('recordDate').valueAsDate = new Date();
-                    populateDropdowns(); // Re-populate after reset
-                    fetchDataAndSummarize({ isSearch: false }); // Refresh data
-                } else {
-                    throw new Error(result.message || 'เกิดข้อผิดพลาดในการบันทึก');
-                }
-            } catch (error) {
-                Swal.fire('ผิดพลาด!', error.message, 'error');
-            }
+                    fetchAllData().then(() => {
+                        renderSummaryTable(allData);
+                        updateCharts();
+                    });
+                } else { throw new Error(result.message); }
+            } catch (error) { Swal.fire('ผิดพลาด!', error.message, 'error'); }
         }
         
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = error => reject(error);
-            });
-        }
-        
-        async function fetchData() {
+        async function fetchAllData() {
+            if (allData.length > 0) return; // Avoid re-fetching if data exists
             Swal.fire({ title: 'กำลังโหลดข้อมูล...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
             try {
                 const response = await fetch(`${SCRIPT_URL}?action=read`);
                 allData = await response.json();
+                allData.sort((a,b) => new Date(b.recordDate) - new Date(a.recordDate));
                 Swal.close();
             } catch(error) {
                 Swal.fire('ผิดพลาด!', 'ไม่สามารถดึงข้อมูลได้', 'error');
                 allData = [];
             }
-            return allData;
         }
 
         async function fetchDataAndView() {
-            await fetchData();
+            await fetchAllData();
             const keyword = document.getElementById('search-keyword').value.toLowerCase();
             const classroom = document.getElementById('search-class').value;
             
             const filteredData = allData.filter(row => {
-                const matchesKeyword = keyword === '' || 
-                                     row.fullName.toLowerCase().includes(keyword) ||
-                                     row.nickname.toLowerCase().includes(keyword) ||
-                                     row.studentId.includes(keyword);
+                const matchesKeyword = keyword === '' || row.fullName.toLowerCase().includes(keyword) || row.nickname.toLowerCase().includes(keyword) || row.studentId.includes(keyword);
                 const matchesClass = classroom === '' || row.classroom == classroom;
                 return matchesKeyword && matchesClass;
             });
@@ -602,100 +390,127 @@
             const tbody = document.getElementById('view-table-body');
             tbody.innerHTML = '';
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">ไม่พบข้อมูล</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">ไม่พบข้อมูล</td></tr>';
                 return;
             }
             data.forEach(row => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${row.recordDate}</td>
-                    <td>${row.level}</td>
-                    <td>${row.classroom}</td>
-                    <td>${row.studentNumber}</td>
-                    <td>${row.studentId}</td>
                     <td>${row.fullName}</td>
-                    <td>${row.nickname}</td>
-                    <td>${row.offenseType}</td>
+                    <td>${row.studentId}</td>
+                    <td>${row.level}</td>
+                    <td>ห้อง ${row.classroom}</td>
+                    <td>ครั้งที่ ${row.occurrence}</td>
                     <td>${row.behavior}</td>
-                    <td>${row.notes}</td>
                     <td>
-                        ${row.imageUrl ? `<a href="${row.imageUrl}" target="_blank" class="btn btn-secondary btn-sm" style="padding: 5px 10px;"><i class="fas fa-image"></i> รูปภาพ</a>` : ''}
-                        ${row.docUrl ? `<a href="${row.docUrl}" target="_blank" class="btn btn-primary btn-sm" style="padding: 5px 10px;"><i class="fas fa-file-alt"></i> เอกสาร</a>` : ''}
+                        <button class="btn btn-secondary btn-sm" onclick="openEditModal('${row.rowId}')"><i class="fas fa-edit"></i> แก้ไข</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
         
-        async function fetchDataAndSummarize({ isSearch }) {
-            await fetchData();
-            let dataToDisplay = [...allData];
-
-            if (isSearch) {
-                const keyword = document.getElementById('summary-search-keyword').value.toLowerCase();
-                dataToDisplay = allData.filter(row => 
-                    keyword === '' || 
-                    row.fullName.toLowerCase().includes(keyword) ||
-                    row.studentId.includes(keyword)
-                );
-            } else {
-                 // Sort by class then date
-                 dataToDisplay.sort((a,b) => {
-                     if (a.classroom < b.classroom) return -1;
-                     if (a.classroom > b.classroom) return 1;
-                     return new Date(b.recordDate) - new Date(a.recordDate);
-                 });
-            }
-            
-            renderSummaryTable(dataToDisplay);
-            renderCharts(allData); // Always render charts with full data
-        }
-
         function renderSummaryTable(data) {
              const tbody = document.getElementById('summary-table-body');
              tbody.innerHTML = '';
              if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">ไม่พบข้อมูล</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">ไม่พบข้อมูล</td></tr>';
                 return;
             }
              data.forEach(row => {
                  const tr = document.createElement('tr');
-                 tr.setAttribute('data-row-id', row.rowId);
                  tr.innerHTML = `
                     <td>${row.recordDate}</td>
-                    <td>${row.fullName} (${row.studentId})</td>
+                    <td>${row.level}</td>
                     <td>ห้อง ${row.classroom}</td>
+                    <td>${row.studentNumber}</td>
+                    <td>${row.studentId}</td>
+                    <td>${row.fullName}</td>
+                    <td>${row.offenseType}</td>
+                    <td>ครั้งที่ ${row.occurrence}</td>
                     <td>${row.behavior}</td>
                     <td>
-                        <button class="btn btn-secondary btn-sm" onclick="editRow('${row.rowId}')"><i class="fas fa-edit"></i> แก้ไข</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteRow('${row.rowId}')"><i class="fas fa-trash"></i> ลบ</button>
+                        ${row.imageUrl ? `<a href="${row.imageUrl}" target="_blank" class="btn btn-secondary btn-sm" style="padding: 5px 10px;"><i class="fas fa-image"></i></a>` : ''}
+                        ${row.docUrl ? `<a href="${row.docUrl}" target="_blank" class="btn btn-primary btn-sm" style="padding: 5px 10px;"><i class="fas fa-file-alt"></i></a>` : ''}
                     </td>
                  `;
                  tbody.appendChild(tr);
              });
         }
         
-        async function editRow(rowId) {
-            const rowData = allData.find(r => r.rowId == rowId);
-            if (!rowData) {
-                Swal.fire('ผิดพลาด', 'ไม่พบข้อมูล', 'error');
-                return;
+        function updateBehaviorDropdown(offenseType, behaviorElement, selectedBehavior = '') {
+            behaviorElement.innerHTML = '<option value="">-- เลือกพฤติกรรม --</option>';
+            if (behaviors[offenseType]) {
+                behaviors[offenseType].forEach(b => {
+                    const selected = (b === selectedBehavior) ? 'selected' : '';
+                    behaviorElement.innerHTML += `<option value="${b}" ${selected}>${b}</option>`;
+                });
             }
+        }
+        
+        async function openEditModal(rowId) {
+            const rowData = allData.find(r => r.rowId == rowId);
+            if (!rowData) return Swal.fire('ผิดพลาด', 'ไม่พบข้อมูล', 'error');
+
+            const modalHtml = `
+                <div style="text-align: left;">
+                    <div class="form-grid">
+                        <div class="form-group"><label>ระดับชั้น</label><select id="swal-level" class="form-control"></select></div>
+                        <div class="form-group"><label>ห้อง</label><select id="swal-classroom" class="form-control"></select></div>
+                        <div class="form-group"><label>เลขที่</label><select id="swal-studentNumber" class="form-control"></select></div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group"><label>รหัสนักเรียน</label><input id="swal-studentId" class="form-control" value="${rowData.studentId}"></div>
+                        <div class="form-group"><label>ชื่อ-สกุล</label><input id="swal-fullName" class="form-control" value="${rowData.fullName}"></div>
+                        <div class="form-group"><label>ชื่อเล่น</label><input id="swal-nickname" class="form-control" value="${rowData.nickname}"></div>
+                    </div>
+                    <hr>
+                    <div class="form-grid">
+                         <div class="form-group"><label>วันที่</label><input id="swal-recordDate" class="form-control" type="date" value="${rowData.recordDate}"></div>
+                         <div class="form-group"><label>ประเภทความผิด</label><select id="swal-offenseType" class="form-control"><option value="ร้ายแรง">ร้ายแรง</option><option value="ไม่ร้ายแรง">ไม่ร้ายแรง</option></select></div>
+                         <div class="form-group"><label>ครั้งที่</label><select id="swal-occurrence" class="form-control"></select></div>
+                    </div>
+                    <div class="form-group"><label>พฤติกรรม</label><select id="swal-behavior" class="form-control"></select></div>
+                    <div class="form-group"><label>หมายเหตุ</label><textarea id="swal-notes" class="swal2-textarea">${rowData.notes}</textarea></div>
+                </div>`;
 
             const { value: formValues } = await Swal.fire({
-                title: 'แก้ไขข้อมูลพฤติกรรม',
-                html: `
-                    <p><b>${rowData.fullName}</b></p>
-                    <input id="swal-date" class="swal2-input" type="date" value="${rowData.recordDate}">
-                    <textarea id="swal-notes" class="swal2-textarea" placeholder="หมายเหตุ">${rowData.notes}</textarea>
-                `,
-                focusConfirm: false,
-                preConfirm: () => {
-                    return {
-                        recordDate: document.getElementById('swal-date').value,
-                        notes: document.getElementById('swal-notes').value
-                    }
+                title: 'แก้ไขข้อมูล',
+                html: modalHtml,
+                width: '80%',
+                didOpen: () => {
+                    const levelEl = document.getElementById('swal-level');
+                    populateDropdown(levelEl, 1, 6, i => ({ value: `ม.${i}`, text: `ม.${i}` }));
+                    levelEl.value = rowData.level;
+
+                    const classEl = document.getElementById('swal-classroom');
+                    populateDropdown(classEl, 1, 18, i => ({ value: i, text: `ห้อง ${i}` }));
+                    classEl.value = rowData.classroom;
+                    
+                    const numEl = document.getElementById('swal-studentNumber');
+                    populateDropdown(numEl, 1, 50, i => ({ value: i, text: i }));
+                    numEl.value = rowData.studentNumber;
+
+                    const occEl = document.getElementById('swal-occurrence');
+                    populateDropdown(occEl, 1, 20, i => ({ value: i, text: `ครั้งที่ ${i}` }));
+                    occEl.value = rowData.occurrence;
+
+                    const offenseEl = document.getElementById('swal-offenseType');
+                    offenseEl.value = rowData.offenseType;
+                    offenseEl.addEventListener('change', (e) => updateBehaviorDropdown(e.target.value, document.getElementById('swal-behavior')));
+                    
+                    updateBehaviorDropdown(rowData.offenseType, document.getElementById('swal-behavior'), rowData.behavior);
                 },
+                focusConfirm: false,
+                preConfirm: () => ({
+                    level: document.getElementById('swal-level').value, classroom: document.getElementById('swal-classroom').value,
+                    studentNumber: document.getElementById('swal-studentNumber').value, studentId: document.getElementById('swal-studentId').value,
+                    fullName: document.getElementById('swal-fullName').value, nickname: document.getElementById('swal-nickname').value,
+                    recordDate: document.getElementById('swal-recordDate').value, offenseType: document.getElementById('swal-offenseType').value,
+                    occurrence: document.getElementById('swal-occurrence').value, behavior: document.getElementById('swal-behavior').value,
+                    notes: document.getElementById('swal-notes').value
+                }),
                 showCancelButton: true,
                 confirmButtonText: '<i class="fas fa-save"></i> บันทึก',
                 cancelButtonText: 'ยกเลิก',
@@ -703,136 +518,131 @@
 
             if (formValues) {
                 Swal.fire({ title: 'กำลังอัปเดต...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-                const params = new URLSearchParams({
-                    action: 'update',
-                    rowId: rowId,
-                    recordDate: formValues.recordDate,
-                    notes: formValues.notes
-                });
-
+                const params = new URLSearchParams({ action: 'full_update', rowId, ...formValues });
+                
                 try {
                     const res = await fetch(SCRIPT_URL, { method: 'POST', body: params });
                     const result = await res.json();
                     if (result.status === 'success') {
                         Swal.fire('สำเร็จ!', 'อัปเดตข้อมูลเรียบร้อย', 'success');
-                        fetchDataAndSummarize({ isSearch: false });
-                    } else {
-                        throw new Error(result.message || 'เกิดข้อผิดพลาด');
-                    }
-                } catch (error) {
-                    Swal.fire('ผิดพลาด!', error.message, 'error');
-                }
+                        allData = []; // Clear cache to force re-fetch
+                        fetchDataAndView(); // Refresh table
+                    } else { throw new Error(result.message); }
+                } catch (error) { Swal.fire('ผิดพลาด!', error.message, 'error'); }
+            }
+        }
+        
+        // --- Charting Logic ---
+        function handleFilterTypeChange(e) {
+            const type = e.target.value;
+            document.getElementById('level-filter-group').style.display = (type === 'level') ? 'block' : 'none';
+            document.getElementById('individual-filter-group').style.display = (type === 'individual') ? 'block' : 'none';
+            updateCharts();
+        }
+
+        function getFilteredDataForChart() {
+            const filterType = document.getElementById('filter-type').value;
+            if (filterType === 'all') {
+                return allData;
+            }
+            if (filterType === 'level') {
+                const selectedLevel = document.getElementById('level-filter').value;
+                return allData.filter(row => row.level === selectedLevel);
+            }
+            if (filterType === 'individual') {
+                const keyword = document.getElementById('individual-keyword').value.toLowerCase();
+                if (keyword === '') return [];
+                return allData.filter(row => row.fullName.toLowerCase().includes(keyword) || row.nickname.toLowerCase().includes(keyword) || row.studentId.includes(keyword));
+            }
+            return [];
+        }
+
+        function updateCharts() {
+            const data = getFilteredDataForChart();
+            const filterType = document.getElementById('filter-type').value;
+            const wrapper = document.getElementById('charts-wrapper');
+
+            // Clear previous charts and containers
+            Object.values(charts).forEach(chart => chart.destroy());
+            charts = {};
+            wrapper.innerHTML = '';
+
+            if (data.length === 0) {
+                wrapper.innerHTML = '<p style="text-align: center;">ไม่พบข้อมูลสำหรับสร้างกราฟ</p>';
+                return;
+            }
+            
+            if (filterType === 'all') {
+                wrapper.innerHTML = `<div class="chart-grid"><div id="chart-container-1"></div><div id="chart-container-2"></div></div><div id="chart-container-3"></div>`;
+                createChart(data, 'bar', 'chart-container-1', 'พฤติกรรมแยกตามระดับชั้น', 'level');
+                createChart(data, 'bar', 'chart-container-2', 'พฤติกรรมแยกตามเดือน', 'month');
+                createChart(data, 'doughnut', 'chart-container-3', 'ประเภทพฤติกรรม (ภาพรวม)', 'behavior');
+            } else if (filterType === 'level') {
+                wrapper.innerHTML = `<div class="chart-grid"><div id="chart-container-1"></div><div id="chart-container-2"></div></div><div class="chart-grid"><div id="chart-container-3"></div><div id="chart-container-4"></div></div>`;
+                createChart(data, 'bar', 'chart-container-1', 'พฤติกรรมแยกตามห้องเรียน', 'classroom');
+                createChart(data, 'bar', 'chart-container-2', 'พฤติกรรมแยกตามเดือน', 'month');
+                createChart(data, 'doughnut', 'chart-container-3', 'ประเภทพฤติกรรม', 'behavior');
+                createChart(data, 'bar', 'chart-container-4', 'นักเรียนที่มีพฤติกรรม (Top 10)', 'student');
+            } else if (filterType === 'individual') {
+                wrapper.innerHTML = `<div class="chart-grid"><div id="chart-container-1"></div><div id="chart-container-2"></div></div>`;
+                const studentName = data.length > 0 ? data[0].fullName : 'นักเรียน';
+                createChart(data, 'doughnut', 'chart-container-1', `ประเภทพฤติกรรม (${studentName})`, 'behavior');
+                createChart(data, 'bar', 'chart-container-2', `พฤติกรรมรายเดือน (${studentName})`, 'month');
             }
         }
 
-        async function deleteRow(rowId) {
-            const result = await Swal.fire({
-                title: 'คุณแน่ใจหรือไม่?',
-                text: "ข้อมูลจะถูกลบอย่างถาวร!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'ใช่, ลบเลย!',
-                cancelButtonText: 'ยกเลิก'
-            });
+        function createChart(data, type, containerId, title, groupBy) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `<canvas id="chart-${containerId}"></canvas>`;
+            const ctx = document.getElementById(`chart-${containerId}`).getContext('2d');
+            
+            const counts = data.reduce((acc, row) => {
+                let key;
+                if (groupBy === 'month') key = new Date(row.recordDate).toLocaleString('th-TH', { month: 'long', year: 'numeric' });
+                else if (groupBy === 'classroom') key = `ห้อง ${row.classroom}`;
+                else if (groupBy === 'student') key = row.fullName;
+                else key = row[groupBy]; // level, behavior
+                
+                acc[key] = (acc[key] || 0) + 1;
+                return acc;
+            }, {});
+            
+            let labels = Object.keys(counts);
+            let chartData = Object.values(counts);
 
-            if (result.isConfirmed) {
-                Swal.fire({ title: 'กำลังลบ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-                const params = new URLSearchParams({ action: 'delete', rowId: rowId });
-                try {
-                    const res = await fetch(SCRIPT_URL, { method: 'POST', body: params });
-                    const result = await res.json();
-                    if (result.status === 'success') {
-                        Swal.fire('ลบแล้ว!', 'ข้อมูลถูกลบเรียบร้อย', 'success');
-                        fetchDataAndSummarize({ isSearch: false });
-                    } else {
-                        throw new Error(result.message || 'เกิดข้อผิดพลาด');
-                    }
-                } catch (error) {
-                    Swal.fire('ผิดพลาด!', error.message, 'error');
-                }
+            if (groupBy === 'student' && labels.length > 10) {
+                const sorted = Object.entries(counts).sort(([,a],[,b]) => b-a).slice(0, 10);
+                labels = sorted.map(item => item[0]);
+                chartData = sorted.map(item => item[1]);
             }
-        }
-
-        function renderCharts(data) {
-            if (!data || data.length === 0) return;
-
-            // Chart by Class
-            const classCounts = data.reduce((acc, row) => {
-                const className = `ห้อง ${row.classroom}`;
-                acc[className] = (acc[className] || 0) + 1;
-                return acc;
-            }, {});
-            const sortedClasses = Object.keys(classCounts).sort((a,b) => parseInt(a.split(' ')[1]) - parseInt(b.split(' ')[1]));
             
-            if(chartByClass) chartByClass.destroy();
-            chartByClass = new Chart(document.getElementById('chartByClass'), {
-                type: 'bar',
+            const backgroundColors = (type === 'doughnut') 
+                ? ['#003366', '#6699CC', '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
+                : '#003366';
+
+            charts[containerId] = new Chart(ctx, {
+                type: type,
                 data: {
-                    labels: sortedClasses,
+                    labels: labels,
                     datasets: [{
-                        label: 'จำนวนการกระทำผิดรายห้อง',
-                        data: sortedClasses.map(c => classCounts[c]),
-                        backgroundColor: 'rgba(0, 51, 102, 0.7)',
-                        borderColor: 'rgba(0, 51, 102, 1)',
+                        label: 'จำนวนครั้ง',
+                        data: chartData,
+                        backgroundColor: backgroundColors,
+                        borderColor: '#ffffff',
                         borderWidth: 1
                     }]
                 },
-                options: { scales: { y: { beginAtZero: true } }, responsive: true, plugins: { title: { display: true, text: 'สรุปพฤติกรรมแยกตามห้องเรียน' }} }
-            });
-
-            // Chart by Month
-            const monthCounts = data.reduce((acc, row) => {
-                const month = new Date(row.recordDate).toLocaleString('th-TH', { month: 'long' });
-                acc[month] = (acc[month] || 0) + 1;
-                return acc;
-            }, {});
-            const monthOrder = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
-            const sortedMonths = Object.keys(monthCounts).sort((a,b) => monthOrder.indexOf(a) - monthOrder.indexOf(b));
-
-            if(chartByMonth) chartByMonth.destroy();
-            chartByMonth = new Chart(document.getElementById('chartByMonth'), {
-                type: 'bar',
-                data: {
-                    labels: sortedMonths,
-                    datasets: [{
-                        label: 'จำนวนการกระทำผิดรายเดือน',
-                        data: sortedMonths.map(m => monthCounts[m]),
-                        backgroundColor: 'rgba(102, 153, 204, 0.7)',
-                        borderColor: 'rgba(102, 153, 204, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: { scales: { y: { beginAtZero: true } }, responsive: true, plugins: { title: { display: true, text: 'สรุปพฤติกรรมแยกตามเดือน' }} }
-            });
-            
-             // Chart by Behavior Type
-            const behaviorCounts = data.reduce((acc, row) => {
-                const behaviorName = row.behavior.split('.')[1] || row.behavior; // Clean name
-                acc[behaviorName] = (acc[behaviorName] || 0) + 1;
-                return acc;
-            }, {});
-             if(chartByBehavior) chartByBehavior.destroy();
-             chartByBehavior = new Chart(document.getElementById('chartByBehavior'), {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(behaviorCounts),
-                    datasets: [{
-                        label: 'พฤติกรรม',
-                        data: Object.values(behaviorCounts),
-                        backgroundColor: [
-                           'rgba(255, 99, 132, 0.7)', 'rgba(54, 162, 235, 0.7)', 'rgba(255, 206, 86, 0.7)',
-                           'rgba(75, 192, 192, 0.7)', 'rgba(153, 102, 255, 0.7)', 'rgba(255, 159, 64, 0.7)',
-                           'rgba(199, 199, 199, 0.7)', 'rgba(83, 102, 255, 0.7)', 'rgba(100, 255, 100, 0.7)'
-                        ],
-                        hoverOffset: 4
-                    }]
-                },
-                 options: { responsive: true, plugins: { title: { display: true, text: 'สรุปพฤติกรรมแยกตามประเภท' }} }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        title: { display: true, text: title, font: { size: 16 } },
+                        legend: { position: type === 'doughnut' ? 'right' : 'top', display: type !== 'bar'}
+                    },
+                    scales: (type === 'bar') ? { y: { beginAtZero: true, ticks: { stepSize: 1 } } } : {}
+                }
             });
         }
-
     </script>
 </body>
 </html>
