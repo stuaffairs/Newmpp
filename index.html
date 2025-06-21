@@ -192,6 +192,7 @@
                         <thead>
                             <tr>
                                 <th>วันที่</th>
+                                <th>รูปโปรไฟล์</th>
                                 <th>ชื่อ-สกุล</th>
                                 <th>ชื่อเล่น</th>
                                 <th>รหัสนักเรียน</th>
@@ -436,7 +437,10 @@
             }
             data.forEach(row => {
                 const tr = document.createElement('tr');
+                const imageId = `profile-pic-${row.rowId}`; // สร้าง ID ที่ไม่ซ้ำกันสำหรับแท็ก img
                 tr.innerHTML = `
+                   <td style="text-align: center; width: 60px;">
+                    <img id="${imageId}" src="https://via.placeholder.com/40" alt="profile" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"> </td>
                     <td>${row.recordDate}</td>
                     <td>${row.fullName}</td>
                     <td>${row.nickname || '-'}</td>
@@ -451,8 +455,34 @@
                     </td>
                 `;
                 tbody.appendChild(tr);
+                
+                // เรียกใช้ฟังก์ชันเพื่อโหลดรูปหลังจากสร้างแถวเสร็จ
+                loadProfilePic(row.studentId, imageId);
             });
         }
+
+        // ฟังก์ชันใหม่สำหรับดึงรูปโปรไฟล์ของนักเรียนคนเดียว
+        async function loadProfilePic(studentId, imageElementId) {
+            const imgElement = document.getElementById(imageElementId);
+            if (!studentId || !imgElement) return;
+        
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getProfilePic&studentId=${studentId}`);
+                const data = await response.json();
+                
+                // ถ้าสำเร็จและมี URL ให้แสดงรูปภาพ
+                if (data.status === 'success' && data.profilePicUrl) {
+                    imgElement.src = data.profilePicUrl;
+                } else {
+                    // ถ้าไม่สำเร็จ ให้แสดงเป็นไอคอนคนแทน
+                    imgElement.outerHTML = '<i class="fas fa-user-circle" style="font-size: 2.5em; color: #ccc;"></i>';
+                }
+            } catch (error) {
+                console.error("Error fetching profile pic for " + studentId, error);
+                imgElement.outerHTML = '<i class="fas fa-user-slash" style="font-size: 2.5em; color: #f00;"></i>';
+            }
+        }
+                
         
         function renderSummaryTable(data) {
              const tbody = document.getElementById('summary-table-body');
