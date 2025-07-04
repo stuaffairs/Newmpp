@@ -420,12 +420,24 @@
             const classroom = document.getElementById('search-class-page2').value;
             
             const filteredData = allData.filter(row => {
-                const matchesKeyword = keyword === '' || row.fullName.toLowerCase().includes(keyword) || row.nickname.toLowerCase().includes(keyword) || row.studentId.includes(keyword);
+                // แปลงข้อมูลเป็น String เสมอเพื่อป้องกัน error และรองรับค่าว่าง (null)
+                const fullName = String(row.fullName || '').toLowerCase();
+                const nickname = String(row.nickname || '').toLowerCase();
+                const studentId = String(row.studentId || '');
+        
+                // ตรวจสอบ keyword กับข้อมูลแต่ละ field
+                    const matchesKeyword = keyword === '' || 
+                                       fullName.includes(keyword) || 
+                                       nickname.includes(keyword) || 
+                                       studentId.includes(keyword);
+                                       
                 const matchesClass = classroom === '' || row.classroom == classroom;
+                
                 return matchesKeyword && matchesClass;
             });
+            
             renderViewTable(filteredData);
-        }
+        }    
         
         function renderViewTable(data) {
             const tbody = document.getElementById('view-table-body');
